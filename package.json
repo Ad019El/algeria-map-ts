@@ -1,6 +1,6 @@
 {
   "name": "algeria-map-ts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A react component that displays an interactive map of Algeria including all 58 wilayas with custom colors for each wilayas.",
   "author": "Adel DAFI",
   "license": "MIT",
@@ -10,6 +10,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@rollup/plugin-json": "^6.1.0",
     "@types/react": "^18.2.46",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
