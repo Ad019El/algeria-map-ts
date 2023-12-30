@@ -2,6 +2,12 @@
 
 A React component that displays an interactive map of Algeria including all 58 wilayas.
 
+## Demo
+
+You can see a live demo of the component in action at the following link:
+
+[Live Demo](https://codesandbox.io/p/devbox/algeria-map-ts-v9p6zg)
+
 ## Installation
 
 This component is available via npm. To install, run the following command:
