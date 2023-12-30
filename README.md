@@ -97,4 +97,4 @@ We'll review your pull request as soon as we can. Thanks for your contribution!
 
 ## Credits
 
-This project is an enhancement of the original [react-algeria-map](https://github.com/AkliYalaoui/react-algeria-map). The improvements and additional features were contributed by [Ad019El](https://github.com/Ad019El), building upon the foundation laid by the original creators.
+This project is an enhancement of the original [react-algeria-map](https://github.com/AkliYalaoui/react-algeria-map).
