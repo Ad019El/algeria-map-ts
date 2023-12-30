@@ -1,0 +1,13 @@
+:root{
+  --react-algeria-map-hover-fill : white;
+  --react-algeria-map-hover-stroke : dodgerblue;
+}
+.state {
+  transition: 1s;
+}
+:hover.state {
+  fill: var(--react-algeria-map-hover-fill,white);
+  stroke: var(--react-algeria-map-hover-stroke,dodgerblue);
+  stroke-width: 4px;
+  cursor: pointer;
+}
