@@ -109,7 +109,7 @@ export const OneColor: Story = {
   ),
 };
 
-export const MultipleColor: Story = {
+export const MultipleColors: Story = {
   render: () => (
     <Map
       data={multipleColor}
