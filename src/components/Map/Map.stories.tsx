@@ -114,6 +114,7 @@ export const MultipleColors: Story = {
     <Map
       data={multipleColor}
       HoverColor="#f4f4f8"
+      color="#fff9eb"
       stroke="#000000"
       hoverStroke="#000000"
     />

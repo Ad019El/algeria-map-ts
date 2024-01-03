@@ -33,8 +33,8 @@ const Map: React.FC<IMapProps> = ({
       viewBox="-248.385 -239.386 982.451 955.452"
       enableBackground="new -248.385 -239.386 982.451 955.452"
     >
-      <g onClick={() => onWilayaClick?.("Adrar", data["Adrar"]?.value)}>
-        <title>{data["Adrar"]?.value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Adrar", data["Adrar"]?.value ?? 0)}>
+        <title>{data["Adrar"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x30_1_Adrar"
@@ -53,8 +53,8 @@ const Map: React.FC<IMapProps> = ({
 			 229.442,216.934 242.8,215.614 248.779,218.874 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Chlef", data["Chlef"]?.value)}>
-        <title>{data["Chlef"]?.value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Chlef", data["Chlef"]?.value ?? 0)}>
+        <title>{data["Chlef"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x30_2_Chlef"
@@ -70,8 +70,12 @@ const Map: React.FC<IMapProps> = ({
 		l0.072-1.73l2.438-2.328l2.072,3.752L238.734-160.41L238.734-160.41z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Laghouat", data["Laghouat"]?.value)}>
-        <title>{data["Laghouat"]?.value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("Laghouat", data["Laghouat"]?.value ?? 0)
+        }
+      >
+        <title>{data["Laghouat"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x30_3_Laghouat"
@@ -93,10 +97,10 @@ const Map: React.FC<IMapProps> = ({
       </g>
       <g
         onClick={() =>
-          onWilayaClick?.("Oum El Bouaghi", data["Oum El Bouaghi"]?.value)
+          onWilayaClick?.("Oum El Bouaghi", data["Oum El Bouaghi"]?.value ?? 0)
         }
       >
-        <title>{data["Oum El Bouaghi"]?.value ?? ""}</title>
+        <title>{data["Oum El Bouaghi"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x30_4_Oum_El-Bouaghi"
@@ -115,8 +119,8 @@ const Map: React.FC<IMapProps> = ({
 	l-0.708-3.074L490.908-165.62L490.908-165.62z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Batna", data["Batna"]?.value)}>
-        <title>{data["Batna"]?.value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Batna", data["Batna"]?.value ?? 0)}>
+        <title>{data["Batna"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x30_5_Batna"
@@ -138,12 +142,12 @@ const Map: React.FC<IMapProps> = ({
 	L445.635-105.596L445.635-105.596z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Béjaïa", data["Béjaïa"]?.value)}>
-        <title>{data["Béjaïa"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Béjaïa", data["Béjaïa"]?.value ?? 0)}>
+        <title>{data["Béjaïa"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x30_6_Béjaïa"
-          fill={data["Béjaïa"].color ?? color}
+          fill={data["Béjaïa"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -155,12 +159,12 @@ const Map: React.FC<IMapProps> = ({
 	l1.07-1.388l-4.318-2.93l-0.076,0.896l-1.858-0.176l-0.892,2.756l-7.242-0.96l-0.096,2.698L364.848-188.482L364.848-188.482z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Biskra", data["Biskra"]?.value)}>
-        <title>{data["Biskra"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Biskra", data["Biskra"]?.value ?? 0)}>
+        <title>{data["Biskra"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x30_7_Biskra"
-          fill={data["Biskra"].color ?? color}
+          fill={data["Biskra"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -173,12 +177,12 @@ const Map: React.FC<IMapProps> = ({
 	l-0.8,0.96l2.1,2.1l-0.84,2l1.64-0.4l-1.44,4.78L452.54-93.946z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Béchar", data["Béchar"]?.value)}>
-        <title>{data["Béchar"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Béchar", data["Béchar"]?.value ?? 0)}>
+        <title>{data["Béchar"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x30_8_Béchar"
-          fill={data["Béchar"].color ?? color}
+          fill={data["Béchar"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -198,12 +202,12 @@ const Map: React.FC<IMapProps> = ({
 	148.361,56.214 145.88,58.635 148.38,62.654 146.361,65.054 146.42,68.794 148.119,72.434 153.962,77.135 152.322,83.094 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Blida", data["Blida"]?.value)}>
-        <title>{data["Blida"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Blida", data["Blida"]?.value ?? 0)}>
+        <title>{data["Blida"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x30_9_Blida"
-          fill={data["Blida"].color ?? color}
+          fill={data["Blida"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -214,12 +218,12 @@ const Map: React.FC<IMapProps> = ({
 	l0.946,1.912l1.466-1.192l1.386,1.396l2.318-2.308l0.166-2.762l3.26,0.538L304.962-191.188L304.962-191.188z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Bouira", data["Bouira"]?.value)}>
-        <title>{data["Bouira"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Bouira", data["Bouira"]?.value ?? 0)}>
+        <title>{data["Bouira"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x31_0_Bouira"
-          fill={data["Bouira"].color ?? color}
+          fill={data["Bouira"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -234,14 +238,14 @@ const Map: React.FC<IMapProps> = ({
       </g>
       <g
         onClick={() =>
-          onWilayaClick?.("Tamanrasset", data["Tamanrasset"]?.value)
+          onWilayaClick?.("Tamanrasset", data["Tamanrasset"]?.value ?? 0)
         }
       >
-        <title>{data["Tamanrasset"].value ?? ""}</title>
+        <title>{data["Tamanrasset"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x31_1_Tamenrasset"
-          fill={data["Tamanrasset"].color ?? color}
+          fill={data["Tamanrasset"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -259,12 +263,14 @@ const Map: React.FC<IMapProps> = ({
 	l4.42-0.1l14.96,8.46L644.7,510.755z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Tébessa", data["Tébessa"]?.value)}>
-        <title>{data["Tébessa"].value ?? ""}</title>
+      <g
+        onClick={() => onWilayaClick?.("Tébessa", data["Tébessa"]?.value ?? 0)}
+      >
+        <title>{data["Tébessa"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x31_2_Tébessa"
-          fill={data["Tébessa"].color ?? color}
+          fill={data["Tébessa"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -280,12 +286,14 @@ const Map: React.FC<IMapProps> = ({
 	521.6,-133.786 524.66,-133.646 519.96,-126.086 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Tlemcen", data["Tlemcen"]?.value)}>
-        <title>{data["Tlemcen"].value ?? ""}</title>
+      <g
+        onClick={() => onWilayaClick?.("Tlemcen", data["Tlemcen"]?.value ?? 0)}
+      >
+        <title>{data["Tlemcen"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x31_3_Tlemcen"
-          fill={data["Tlemcen"].color ?? color}
+          fill={data["Tlemcen"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -298,12 +306,12 @@ const Map: React.FC<IMapProps> = ({
 	l-2.382-0.092l-1.012-3.654l2.626-4.254L123.968-119.174L123.968-119.174z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Tiaret", data["Tiaret"]?.value)}>
-        <title>{data["Tiaret"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Tiaret", data["Tiaret"]?.value ?? 0)}>
+        <title>{data["Tiaret"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x31_4_Tiaret"
-          fill={data["Tiaret"].color ?? color}
+          fill={data["Tiaret"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -320,13 +328,15 @@ const Map: React.FC<IMapProps> = ({
         />
       </g>
       <g
-        onClick={() => onWilayaClick?.("Tizi Ouzou", data["Tizi Ouzou"]?.value)}
+        onClick={() =>
+          onWilayaClick?.("Tizi Ouzou", data["Tizi Ouzou"]?.value ?? 0)
+        }
       >
-        <title>{data["Tizi Ouzou"].value ?? ""}</title>
+        <title>{data["Tizi Ouzou"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x31_5_Tizi-Ouzou"
-          fill={data["Tizi Ouzou"].color ?? color}
+          fill={data["Tizi Ouzou"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -337,12 +347,12 @@ const Map: React.FC<IMapProps> = ({
 	l0.09-1.56l2.708-2.326l-0.27-2.478l10.878-0.642l3.702,0.852l1.972-1.094L358.202-211.78L358.202-211.78z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Alger", data["Alger"]?.value)}>
-        <title>{data["Alger"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Alger", data["Alger"]?.value ?? 0)}>
+        <title>{data["Alger"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x31_6_Alger"
-          fill={data["Alger"].color ?? color}
+          fill={data["Alger"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -352,12 +362,12 @@ const Map: React.FC<IMapProps> = ({
 	l2.324,1.05l4.238-1.244l0.314-2.59L307.54-205.556L307.54-205.556z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Djelfa", data["Djelfa"]?.value)}>
-        <title>{data["Djelfa"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Djelfa", data["Djelfa"]?.value ?? 0)}>
+        <title>{data["Djelfa"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x31_7_Djelfa"
-          fill={data["Djelfa"].color ?? color}
+          fill={data["Djelfa"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -379,12 +389,12 @@ const Map: React.FC<IMapProps> = ({
 	382.462,-41.846 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Jijel", data["Jijel"]?.value)}>
-        <title>{data["Jijel"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Jijel", data["Jijel"]?.value ?? 0)}>
+        <title>{data["Jijel"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x31_8_Jijel"
-          fill={data["Jijel"].color ?? color}
+          fill={data["Jijel"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -395,12 +405,12 @@ const Map: React.FC<IMapProps> = ({
 	L406.661-196.316L406.661-196.316z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Sétif", data["Sétif"]?.value)}>
-        <title>{data["Sétif"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Sétif", data["Sétif"]?.value ?? 0)}>
+        <title>{data["Sétif"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x31_9_Sétif"
-          fill={data["Sétif"].color ?? color}
+          fill={data["Sétif"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -415,12 +425,12 @@ const Map: React.FC<IMapProps> = ({
 	l1.502-0.048l0.806,3.708l1.958,0.154l1.984-1.916l2.498,1.352L406.661-196.316L406.661-196.316z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Saïda", data["Saïda"]?.value)}>
-        <title>{data["Saïda"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Saïda", data["Saïda"]?.value ?? 0)}>
+        <title>{data["Saïda"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_0_Saida"
-          fill={data["Saïda"].color ?? color}
+          fill={data["Saïda"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -433,12 +443,12 @@ const Map: React.FC<IMapProps> = ({
 	l0.632,1.062l5.948,2.448L202.492-83.178L202.492-83.178z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Skikda", data["Skikda"]?.value)}>
-        <title>{data["Skikda"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Skikda", data["Skikda"]?.value ?? 0)}>
+        <title>{data["Skikda"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_1_Skikda"
-          fill={data["Skikda"].color ?? color}
+          fill={data["Skikda"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -453,14 +463,14 @@ const Map: React.FC<IMapProps> = ({
       </g>
       <g
         onClick={() =>
-          onWilayaClick?.("Sidi Bel Abbès", data["Sidi Bel Abbès"]?.value)
+          onWilayaClick?.("Sidi Bel Abbès", data["Sidi Bel Abbès"]?.value ?? 0)
         }
       >
-        <title>{data["Sidi Bel Abbès"].value ?? ""}</title>
+        <title>{data["Sidi Bel Abbès"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_2_Sidi_Bel_Abbes"
-          fill={data["Sidi Bel Abbès"].color ?? color}
+          fill={data["Sidi Bel Abbès"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -476,12 +486,12 @@ const Map: React.FC<IMapProps> = ({
 	L144.74-136.602L144.74-136.602z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Annaba", data["Annaba"]?.value)}>
-        <title>{data["Annaba"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Annaba", data["Annaba"]?.value ?? 0)}>
+        <title>{data["Annaba"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_3_Annaba"
-          fill={data["Annaba"].color ?? color}
+          fill={data["Annaba"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -492,12 +502,12 @@ const Map: React.FC<IMapProps> = ({
 	l0.35,2.374l5.426,1.006L486.755-204.574L486.755-204.574z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Guelma", data["Guelma"]?.value)}>
-        <title>{data["Guelma"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Guelma", data["Guelma"]?.value ?? 0)}>
+        <title>{data["Guelma"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_4_Guelma"
-          fill={data["Guelma"].color ?? color}
+          fill={data["Guelma"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -512,14 +522,14 @@ const Map: React.FC<IMapProps> = ({
       </g>
       <g
         onClick={() =>
-          onWilayaClick?.("Constantine", data["Constantine"]?.value)
+          onWilayaClick?.("Constantine", data["Constantine"]?.value ?? 0)
         }
       >
-        <title>{data["Constantine"].value ?? ""}</title>
+        <title>{data["Constantine"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_5_Constantine"
-          fill={data["Constantine"].color ?? color}
+          fill={data["Constantine"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -531,12 +541,12 @@ const Map: React.FC<IMapProps> = ({
 	L460.215-176.918z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Médéa", data["Médéa"]?.value)}>
-        <title>{data["Médéa"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Médéa", data["Médéa"]?.value ?? 0)}>
+        <title>{data["Médéa"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_6_Médéa"
-          fill={data["Médéa"].color ?? color}
+          fill={data["Médéa"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -553,13 +563,15 @@ const Map: React.FC<IMapProps> = ({
         />
       </g>
       <g
-        onClick={() => onWilayaClick?.("Mostaganem", data["Mostaganem"]?.value)}
+        onClick={() =>
+          onWilayaClick?.("Mostaganem", data["Mostaganem"]?.value ?? 0)
+        }
       >
-        <title>{data["Mostaganem"].value ?? ""}</title>
+        <title>{data["Mostaganem"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_7_Mostaganem"
-          fill={data["Mostaganem"].color ?? color}
+          fill={data["Mostaganem"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -570,12 +582,12 @@ const Map: React.FC<IMapProps> = ({
 	L162.14-154.198z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("M'Sila", data["M'Sila"]?.value)}>
-        <title>{data["M'Sila"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("M'Sila", data["M'Sila"]?.value ?? 0)}>
+        <title>{data["M'Sila"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_8_M_x27_sila"
-          fill={data["M'Sila"].color ?? color}
+          fill={data["M'Sila"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -591,12 +603,14 @@ const Map: React.FC<IMapProps> = ({
 	l2.34-0.1l0.36,2.44l2.82-1.02l-0.34,1.24l2.94,2.1l2.22-0.48l0.98,1.02l-0.84,1.08l1.1,1.62L391.46-148.006z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Mascara", data["Mascara"]?.value)}>
-        <title>{data["Mascara"].value ?? ""}</title>
+      <g
+        onClick={() => onWilayaClick?.("Mascara", data["Mascara"]?.value ?? 0)}
+      >
+        <title>{data["Mascara"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x32_9_Mascara"
-          fill={data["Mascara"].color ?? color}
+          fill={data["Mascara"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -610,12 +624,14 @@ const Map: React.FC<IMapProps> = ({
 	l2.058,2.854l2.14-0.36l0.06,1.526l1.212-1.926L176.464-149.777L176.464-149.777z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Ouargla", data["Ouargla"]?.value)}>
-        <title>{data["Ouargla"].value ?? ""}</title>
+      <g
+        onClick={() => onWilayaClick?.("Ouargla", data["Ouargla"]?.value ?? 0)}
+      >
+        <title>{data["Ouargla"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x33_0_Ouargla"
-          fill={data["Ouargla"].color ?? color}
+          fill={data["Ouargla"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -626,12 +642,12 @@ const Map: React.FC<IMapProps> = ({
 	l5.52,2.22l5.06,2.26l3.3,1.62l6.78,0.8l79.46-8.52L582,103.394z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Oran", data["Oran"]?.value)}>
-        <title>{data["Oran"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Oran", data["Oran"]?.value ?? 0)}>
+        <title>{data["Oran"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x33_1_Oran"
-          fill={data["Oran"].color ?? color}
+          fill={data["Oran"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -643,12 +659,16 @@ const Map: React.FC<IMapProps> = ({
 	l0.364,1.344l3.006-1.494l-0.48-1.928L144.74-136.602L144.74-136.602z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("El Bayadh", data["El Bayadh"]?.value)}>
-        <title>{data["El Bayadh"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("El Bayadh", data["El Bayadh"]?.value ?? 0)
+        }
+      >
+        <title>{data["El Bayadh"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x33_2_El_Bayadh"
-          fill={data["El Bayadh"].color ?? color}
+          fill={data["El Bayadh"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -666,12 +686,12 @@ const Map: React.FC<IMapProps> = ({
 	256.299,-16.605 256.001,-13.545 262.221,-0.406 263.361,11.955 264.919,18.234 264.941,18.255 267.201,27.315 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Illizi", data["Illizi"]?.value)}>
-        <title>{data["Illizi"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Illizi", data["Illizi"]?.value ?? 0)}>
+        <title>{data["Illizi"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x33_3_Illizi"
-          fill={data["Illizi"].color ?? color}
+          fill={data["Illizi"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -691,15 +711,15 @@ const Map: React.FC<IMapProps> = ({
         onClick={() =>
           onWilayaClick?.(
             "Bordj Bou Arreridj",
-            data["Bordj Bou Arreridj"]?.value
+            data["Bordj Bou Arreridj"]?.value ?? 0
           )
         }
       >
-        <title>{data["Bordj Bou Arreridj"].value ?? ""}</title>
+        <title>{data["Bordj Bou Arreridj"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x33_4_Bord-Bou-Arréridj"
-          fill={data["Bordj Bou Arreridj"].color ?? color}
+          fill={data["Bordj Bou Arreridj"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -711,12 +731,16 @@ const Map: React.FC<IMapProps> = ({
 	l5.44-1.064l2.658,3.338l2.334-0.098l0.364,2.434L378.418-155.512L378.418-155.512z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Boumerdès", data["Boumerdès"]?.value)}>
-        <title>{data["Boumerdès"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("Boumerdès", data["Boumerdès"]?.value ?? 0)
+        }
+      >
+        <title>{data["Boumerdès"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x33_5_Boumerdès"
-          fill={data["Boumerdès"].color ?? color}
+          fill={data["Boumerdès"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -727,12 +751,14 @@ const Map: React.FC<IMapProps> = ({
 	l1.772-0.698l-1.072,0.958l0.94,1.714l-0.768,0.828L305.453-193.743L305.453-193.743z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("El Tarf", data["El Tarf"]?.value)}>
-        <title>{data["El Tarf"].value ?? ""}</title>
+      <g
+        onClick={() => onWilayaClick?.("El Tarf", data["El Tarf"]?.value ?? 0)}
+      >
+        <title>{data["El Tarf"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x33_6_El-Taref"
-          fill={data["El Tarf"].color ?? color}
+          fill={data["El Tarf"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -743,12 +769,14 @@ const Map: React.FC<IMapProps> = ({
 	l-2.372-0.674l0.398-4.452l-8.904,2.882l-2.858-1.31l-3.644,0.546l-1.964-1.722l-9.47,5.352L492.47-214.997L492.47-214.997z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Tindouf", data["Tindouf"]?.value)}>
-        <title>{data["Tindouf"].value ?? ""}</title>
+      <g
+        onClick={() => onWilayaClick?.("Tindouf", data["Tindouf"]?.value ?? 0)}
+      >
+        <title>{data["Tindouf"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x33_7_Tindouf"
-          fill={data["Tindouf"].color ?? color}
+          fill={data["Tindouf"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -762,13 +790,15 @@ const Map: React.FC<IMapProps> = ({
         />
       </g>
       <g
-        onClick={() => onWilayaClick?.("Tissemsilt", data["Tissemsilt"]?.value)}
+        onClick={() =>
+          onWilayaClick?.("Tissemsilt", data["Tissemsilt"]?.value ?? 0)
+        }
       >
-        <title>{data["Tissemsilt"].value ?? ""}</title>
+        <title>{data["Tissemsilt"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x33_8_Tissemsilt"
-          fill={data["Tissemsilt"].color ?? color}
+          fill={data["Tissemsilt"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -780,12 +810,14 @@ const Map: React.FC<IMapProps> = ({
 	l-3.82-2.34l-2.072-3.752l-2.438,2.328l-0.072,1.73l-4.524,1.24l0.768,0.696l-1.036,0.666L225.421-157.014L225.421-157.014z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("El Oued", data["El Oued"]?.value)}>
-        <title>{data["El Oued"].value ?? ""}</title>
+      <g
+        onClick={() => onWilayaClick?.("El Oued", data["El Oued"]?.value ?? 0)}
+      >
+        <title>{data["El Oued"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x33_9_El_Oued"
-          fill={data["El Oued"].color ?? color}
+          fill={data["El Oued"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -798,12 +830,16 @@ const Map: React.FC<IMapProps> = ({
 	498.72,-39.006 502.699,-26.825 505.879,-26.806 515.22,-22.946 515.32,-20.386 524.84,-9.266 527.22,7.054 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Khenchela", data["Khenchela"]?.value)}>
-        <title>{data["Khenchela"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("Khenchela", data["Khenchela"]?.value ?? 0)
+        }
+      >
+        <title>{data["Khenchela"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x34_0_Khenchela"
-          fill={data["Khenchela"].color ?? color}
+          fill={data["Khenchela"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -822,13 +858,15 @@ const Map: React.FC<IMapProps> = ({
         />
       </g>
       <g
-        onClick={() => onWilayaClick?.("Souk Ahras", data["Souk Ahras"]?.value)}
+        onClick={() =>
+          onWilayaClick?.("Souk Ahras", data["Souk Ahras"]?.value ?? 0)
+        }
       >
-        <title>{data["Souk Ahras"].value ?? ""}</title>
+        <title>{data["Souk Ahras"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x34_1_Souk_Ahras"
-          fill={data["Souk Ahras"].color ?? color}
+          fill={data["Souk Ahras"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -840,12 +878,12 @@ const Map: React.FC<IMapProps> = ({
 	l1.666,3.652l-1.736,3.102L514.766-170.062L514.766-170.062z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Tipaza", data["Tipaza"]?.value)}>
-        <title>{data["Tipaza"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Tipaza", data["Tipaza"]?.value ?? 0)}>
+        <title>{data["Tipaza"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x34_2_Tipaza"
-          fill={data["Tipaza"].color ?? color}
+          fill={data["Tipaza"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -855,12 +893,12 @@ const Map: React.FC<IMapProps> = ({
 	l-2.352-0.56l-13.48,4.064l-4.622-0.548L238.204-193.226L238.204-193.226z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Mila", data["Mila"]?.value)}>
-        <title>{data["Mila"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Mila", data["Mila"]?.value ?? 0)}>
+        <title>{data["Mila"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x34_3_Mila"
-          fill={data["Mila"].color ?? color}
+          fill={data["Mila"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -872,12 +910,16 @@ const Map: React.FC<IMapProps> = ({
 	l0.426,1.542l-1.43-1.02l-3.3,0.452L425.59-162.223L425.59-162.223z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Aïn Defla", data["Aïn Defla"]?.value)}>
-        <title>{data["Aïn Defla"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("Aïn Defla", data["Aïn Defla"]?.value ?? 0)
+        }
+      >
+        <title>{data["Aïn Defla"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x34_4_Aïn_Defla"
-          fill={data["Aïn Defla"].color ?? color}
+          fill={data["Aïn Defla"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -889,12 +931,12 @@ const Map: React.FC<IMapProps> = ({
 	L271.403-177l1.25-3.82l2.692,0.086L276.861-181.958L276.861-181.958z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Naâma", data["Naâma"]?.value)}>
-        <title>{data["Naâma"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Naâma", data["Naâma"]?.value ?? 0)}>
+        <title>{data["Naâma"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x34_5_Naâma"
-          fill={data["Naâma"].color ?? color}
+          fill={data["Naâma"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -912,14 +954,14 @@ const Map: React.FC<IMapProps> = ({
       </g>
       <g
         onClick={() =>
-          onWilayaClick?.("Aïn Témouchent", data["Aïn Témouchent"]?.value)
+          onWilayaClick?.("Aïn Témouchent", data["Aïn Témouchent"]?.value ?? 0)
         }
       >
-        <title>{data["Aïn Témouchent"].value ?? ""}</title>
+        <title>{data["Aïn Témouchent"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x34_6_Aïn_Témouchent"
-          fill={data["Aïn Témouchent"].color ?? color}
+          fill={data["Aïn Témouchent"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -931,12 +973,16 @@ const Map: React.FC<IMapProps> = ({
 	l-1.346-0.358l0.572,3.892l-2.76,0.922l-0.496,2.902L123.968-119.174L123.968-119.174z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Ghardaïa", data["Ghardaïa"]?.value)}>
-        <title>{data["Ghardaïa"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("Ghardaïa", data["Ghardaïa"]?.value ?? 0)
+        }
+      >
+        <title>{data["Ghardaïa"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x34_7_Ghardaïa_1_"
-          fill={data["Ghardaïa"].color ?? color}
+          fill={data["Ghardaïa"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -948,12 +994,16 @@ const Map: React.FC<IMapProps> = ({
 	330.822,-12.306 332.361,-13.146 358.52,-11.346 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Relizane", data["Relizane"]?.value)}>
-        <title>{data["Relizane"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("Relizane", data["Relizane"]?.value ?? 0)
+        }
+      >
+        <title>{data["Relizane"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x34_8_Relizane"
-          fill={data["Relizane"].color ?? color}
+          fill={data["Relizane"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -968,14 +1018,14 @@ const Map: React.FC<IMapProps> = ({
       </g>
       <g
         onClick={() =>
-          onWilayaClick?.("El Meghaier", data["El Meghaier"]?.value)
+          onWilayaClick?.("El Meghaier", data["El Meghaier"]?.value ?? 0)
         }
       >
-        <title>{data["El Meghaier"].value ?? ""}</title>
+        <title>{data["El Meghaier"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x34_9_El_M_x27_Ghair"
-          fill={data["El Meghaier"].color ?? color}
+          fill={data["El Meghaier"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -986,12 +1036,16 @@ const Map: React.FC<IMapProps> = ({
 	423.4,-56.186 425.679,-50.986 425.759,-45.886 423.84,-43.745 426.199,-40.806 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("El Menia", data["El Menia"]?.value)}>
-        <title>{data["El Menia"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("El Menia", data["El Menia"]?.value ?? 0)
+        }
+      >
+        <title>{data["El Menia"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x35_0_El_Meniaa"
-          fill={data["El Menia"].color ?? color}
+          fill={data["El Menia"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -1004,14 +1058,14 @@ const Map: React.FC<IMapProps> = ({
       </g>
       <g
         onClick={() =>
-          onWilayaClick?.("Ouled Djellal", data["Ouled Djellal"]?.value)
+          onWilayaClick?.("Ouled Djellal", data["Ouled Djellal"]?.value ?? 0)
         }
       >
-        <title>{data["Ouled Djellal"].value ?? ""}</title>
+        <title>{data["Ouled Djellal"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x35_1_Ouled_Djellal"
-          fill={data["Ouled Djellal"].color ?? color}
+          fill={data["Ouled Djellal"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -1028,15 +1082,15 @@ const Map: React.FC<IMapProps> = ({
         onClick={() =>
           onWilayaClick?.(
             "Bordj Badji Mokhtar",
-            data["Bordj Badji Mokhtar"]?.value
+            data["Bordj Badji Mokhtar"]?.value ?? 0
           )
         }
       >
-        <title>{data["Bordj Badji Mokhtar"].value ?? ""}</title>
+        <title>{data["Bordj Badji Mokhtar"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x35_2_Bordj_Baji_Mokhtar"
-          fill={data["Bordj Badji Mokhtar"].color ?? color}
+          fill={data["Bordj Badji Mokhtar"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -1050,13 +1104,15 @@ const Map: React.FC<IMapProps> = ({
         />
       </g>
       <g
-        onClick={() => onWilayaClick?.("Béni Abbès", data["Béni Abbès"]?.value)}
+        onClick={() =>
+          onWilayaClick?.("Béni Abbès", data["Béni Abbès"]?.value ?? 0)
+        }
       >
-        <title>{data["Béni Abbès"].value ?? ""}</title>
+        <title>{data["Béni Abbès"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x35_3_Béni_Abbès"
-          fill={data["Béni Abbès"].color ?? color}
+          fill={data["Béni Abbès"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -1072,12 +1128,16 @@ const Map: React.FC<IMapProps> = ({
 	147.559,99.774 150.559,104.035 167.559,104.035 170.942,105.894 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Timimoun", data["Timimoun"]?.value)}>
-        <title>{data["Timimoun"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("Timimoun", data["Timimoun"]?.value ?? 0)
+        }
+      >
+        <title>{data["Timimoun"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x35_4_Timimoun"
-          fill={data["Timimoun"].color ?? color}
+          fill={data["Timimoun"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -1088,12 +1148,16 @@ const Map: React.FC<IMapProps> = ({
 	155.201,140.114 163.14,126.294 180.002,107.355 180.38,106.915 212.02,84.554 254.18,58.195 252.822,115.434 247.54,141.994 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Touggourt", data["Touggourt"]?.value)}>
-        <title>{data["Touggourt"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("Touggourt", data["Touggourt"]?.value ?? 0)
+        }
+      >
+        <title>{data["Touggourt"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x35_5_Touggourt"
-          fill={data["Touggourt"].color ?? color}
+          fill={data["Touggourt"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -1103,12 +1167,12 @@ const Map: React.FC<IMapProps> = ({
 	l0.1-2.8l1.32-1.22l1.1,2.1l5.46-4.28l1.52-0.22l1.04,2.08l0.64-1.6l2.42,15.32l16.2,45.94l15.56,23.16L479.759,35.014z"
         />
       </g>
-      <g onClick={() => onWilayaClick?.("Djanet", data["Djanet"]?.value)}>
-        <title>{data["Djanet"].value ?? ""}</title>
+      <g onClick={() => onWilayaClick?.("Djanet", data["Djanet"]?.value ?? 0)}>
+        <title>{data["Djanet"]?.value ?? 0}</title>
         <polygon
           className="state"
           id="_x35_6_Djanet"
-          fill={data["Djanet"].color ?? color}
+          fill={data["Djanet"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -1122,12 +1186,16 @@ const Map: React.FC<IMapProps> = ({
 	664.68,404.115 668.1,404.594 670.68,405.635 675.76,410.695 679.78,412.015 693.94,420.755 702.16,416.794 "
         />
       </g>
-      <g onClick={() => onWilayaClick?.("In Salah", data["In Salah"]?.value)}>
-        <title>{data["In Salah"].value ?? ""}</title>
+      <g
+        onClick={() =>
+          onWilayaClick?.("In Salah", data["In Salah"]?.value ?? 0)
+        }
+      >
+        <title>{data["In Salah"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x35_7_In_Salah"
-          fill={data["In Salah"].color ?? color}
+          fill={data["In Salah"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
@@ -1142,13 +1210,15 @@ const Map: React.FC<IMapProps> = ({
         />
       </g>
       <g
-        onClick={() => onWilayaClick?.("In Guezzam", data["In Guezzam"]?.value)}
+        onClick={() =>
+          onWilayaClick?.("In Guezzam", data["In Guezzam"]?.value ?? 0)
+        }
       >
-        <title>{data["In Guezzam"].value ?? ""}</title>
+        <title>{data["In Guezzam"]?.value ?? 0}</title>
         <path
           className="state"
           id="_x35_8_In_Guezzam"
-          fill={data["In Guezzam"].color ?? color}
+          fill={data["In Guezzam"]?.color ?? color}
           stroke={stroke}
           strokeWidth="0.75"
           strokeLinecap="round"
