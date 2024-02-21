@@ -5,6 +5,6 @@ export interface IMapProps {
   stroke?: string;
   hoverStroke?: string;
   HoverColor?: string;
-  data: { [key: string]: { value: number; color?: string } };
-  onWilayaClick?: (wilaya: string, value: number) => void;
+  data: { [key: string]: { value: number | string; color?: string } };
+  onWilayaClick?: (wilaya: string, value: number | string) => void;
 }

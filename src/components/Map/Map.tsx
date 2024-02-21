@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./Map.css";
 import { IMapProps } from "./types";
 
@@ -12,6 +12,7 @@ const Map: React.FC<IMapProps> = ({
   data,
   onWilayaClick,
 }) => {
+  const [hover, setHover] = useState(false);
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--react-algeria-map-hover-fill",
