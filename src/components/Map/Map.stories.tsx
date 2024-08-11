@@ -2,6 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import Map from "./Map";
 
+
 const mockData = {
   Adrar: { value: 120 },
   Alger: { value: 60 },
@@ -62,6 +63,7 @@ const mockData = {
   Touggourt: { value: 57 },
   Tébessa: { value: 58 },
 };
+export const wilayas = Object.keys(mockData) as Array<keyof typeof mockData>;
 
 const meta: Meta<typeof Map> = {
   component: Map,
@@ -117,6 +119,9 @@ export const MultipleColors: Story = {
       color="#fff9eb"
       stroke="#000000"
       hoverStroke="#000000"
+      getHoverContent={(record) => `<div style="display: flex; flex-direction: column;color : #FF5100">
+       Hello ${record.value}
+        <div>`}
     />
   ),
 };

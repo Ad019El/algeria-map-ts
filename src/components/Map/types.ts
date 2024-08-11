@@ -7,4 +7,6 @@ export interface IMapProps {
   HoverColor?: string;
   data: { [key: string]: { value: number | string; color?: string } };
   onWilayaClick?: (wilaya: string, value: number | string) => void;
+  getHoverContent?: (record : any) => string;
+  hoverContentStyle? : React.CSSProperties
 }

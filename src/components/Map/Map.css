@@ -11,3 +11,12 @@
   stroke-width: 4px;
   cursor: pointer;
 }
+#tooltip{
+  position: absolute;
+  background-color: #fff;
+  padding:4px;
+  width: 100px;
+  height: 100px;
+  z-index: 700;
+  display: none;
+}
