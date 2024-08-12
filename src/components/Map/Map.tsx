@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./Map.css";
 import { IMapProps } from "./types";
-import { wilayas } from "./Map.stories";
+import { debounce, wilayas } from "../../utils";
 
 const Map: React.FC<IMapProps> = ({
   height,
@@ -24,20 +24,36 @@ const Map: React.FC<IMapProps> = ({
   const elements=document.getElementById('svg2')?.getElementsByTagName('g') || [];
 
       for(let i=0; i<elements.length; i++){
-      elements[i].addEventListener('mousemove', function(ev : MouseEvent ){
-       console.log('move',ev.pageX,ev.pageY);
-       if(tooltipRef.current)
-  {     tooltipRef.current.innerHTML=getHoverContent?.(data[wilayas[i]]) || '';
-       tooltipRef.current.style.left=ev.pageX+"px";
-       tooltipRef.current.style.top=(ev.pageY + 20)+"px";  
-       tooltipRef.current.style.display='block';  }
-      })
-      elements[i].addEventListener('mouseout', function(ev){
-       console.log('out',ev.offsetX,ev.offsetY);
-       if(tooltipRef.current)
-       tooltipRef.current.style.display = 'none'
+      elements[i].addEventListener('mousemove',function(ev){
+       
+       
+    
+      (debounce(() => {
+        
+        
+         if(tooltipRef.current)
+          {    
+            tooltipRef.current.innerHTML=getHoverContent?.(data[wilayas[i]]) || '';
+               tooltipRef.current.style.left=ev.pageX+"px";
+               tooltipRef.current.style.top=(ev.pageY + 20)+"px";  
+               tooltipRef.current.style.display='block';  
+          }else{
+            console.warn("Invalid tooltip ref");   
+        
+          }
+      },100))()
+  
+        })
+      elements[i].addEventListener('mouseout', (ev) => {
+        (debounce(function(){
 
 
+          if(tooltipRef.current)
+          tooltipRef.current.style.display = 'none'
+         else{
+           console.warn("Invalid tooltip ref");
+         }
+         },100))()
       })
      };
     }
