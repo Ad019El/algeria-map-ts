@@ -1,4 +1,4 @@
-import React, { useEffect, useId } from "react";
+import React, { useEffect, useId, useRef } from "react";
 import "./Map.css";
 import { IMapProps } from "./types";
 import { debounce, wilayas } from "../../utils";
@@ -13,53 +13,52 @@ const Map: React.FC<IMapProps> = ({
   data,
   onWilayaClick,
   getHoverContent,
-  hoverContentStyle
+  hoverContentStyle,
 }) => {
-
-  const tooltipRef = React.createRef<HTMLDivElement>();
+  const tooltipRef = useRef<HTMLDivElement>(null);
   const svgId = useId();
+
   useEffect(() => {
+    const elements =
+      document.getElementById(svgId)?.getElementsByTagName("g") || [];
 
+    const handleMouseMove = (i: number) => (ev: MouseEvent) => {
+      debounce(() => {
+        if (tooltipRef.current) {
+          tooltipRef.current.innerHTML =
+            getHoverContent?.(data[wilayas[i]]) || "";
+          tooltipRef.current.style.left = ev.pageX + "px";
+          tooltipRef.current.style.top = ev.pageY + 20 + "px";
+          tooltipRef.current.style.display = "block";
+        } else {
+          console.warn("Invalid tooltip ref");
+        }
+      }, 100)();
+    };
 
-    {
-  const elements=document.getElementById(svgId)?.getElementsByTagName('g') || [];
+    const handleMouseOut = () => {
+      debounce(() => {
+        if (tooltipRef.current) {
+          tooltipRef.current.style.display = "none";
+        } else {
+          console.warn("Invalid tooltip ref");
+        }
+      }, 100)();
+    };
 
-      for(let i=0; i<elements.length; i++){
-      elements[i].addEventListener('mousemove',function(ev){
-       
-       
-    
-      (debounce(() => {
-        
-        
-         if(tooltipRef.current)
-          {    
-            tooltipRef.current.innerHTML=getHoverContent?.(data[wilayas[i]]) || '';
-               tooltipRef.current.style.left=ev.pageX+"px";
-               tooltipRef.current.style.top=(ev.pageY + 20)+"px";  
-               tooltipRef.current.style.display='block';  
-          }else{
-            console.warn("Invalid tooltip ref");   
-        
-          }
-      },100))()
-  
-        })
-      elements[i].addEventListener('mouseout', (ev) => {
-        (debounce(function(){
-
-
-          if(tooltipRef.current)
-          tooltipRef.current.style.display = 'none'
-         else{
-           console.warn("Invalid tooltip ref");
-         }
-         },100))()
-      })
-     };
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].addEventListener("mousemove", handleMouseMove(i));
+      elements[i].addEventListener("mouseout", handleMouseOut);
     }
-   
-  },[svgId,tooltipRef.current])
+
+    return () => {
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].removeEventListener("mousemove", handleMouseMove(i));
+        elements[i].removeEventListener("mouseout", handleMouseOut);
+      }
+    };
+  }, [svgId, data, wilayas, getHoverContent]);
+
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--react-algeria-map-hover-fill",
@@ -72,30 +71,30 @@ const Map: React.FC<IMapProps> = ({
   }, [HoverColor, hoverStroke]);
 
   return (
-    <span
-    id="algeria_map"
-    >
-      <div style={hoverContentStyle} className="algeria-map-tooltip"  ref={tooltipRef}></div>
+    <div>
+      <div
+        style={hoverContentStyle}
+        className="algeria-map-tooltip"
+        ref={tooltipRef}
+      ></div>
       <svg
-      id={svgId}
-      x="0px"
-      y="0px"
-      width={width ?? "100%"}
-      height={height ?? "500px"}
-      viewBox="-248.385 -239.386 982.451 955.452"
-      enableBackground="new -248.385 -239.386 982.451 955.452"
-  
-    >
-      <g onClick={() => onWilayaClick?.("Adrar", data["Adrar"]?.value ?? 0)}>
-        
-        <polygon
-          className="state"
-          id="_x30_1_Adrar"
-          fill={data["Adrar"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="251.102,224.174 
+        id={svgId}
+        x="0px"
+        y="0px"
+        width={width ?? "100%"}
+        height={height ?? "500px"}
+        viewBox="-248.385 -239.386 982.451 955.452"
+        enableBackground="new -248.385 -239.386 982.451 955.452"
+      >
+        <g onClick={() => onWilayaClick?.("Adrar", data["Adrar"]?.value ?? 0)}>
+          <polygon
+            className="state"
+            id="_x30_1_Adrar"
+            fill={data["Adrar"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="251.102,224.174 
 			 251.02,224.415 250.081,227.454 243.742,237.514 242.119,257.674 238.4,264.035 238.502,276.455 242.201,282.015 237.081,294.895 
 			 236.14,312.654 231.442,316.015 231.16,314.375 227.68,314.775 225.9,313.154 220.64,314.775 218.26,319.674 203.3,335.034 
 			 208.722,347.115 225.861,371.375 226.16,415.255 226.38,448.154 226.38,448.835 -28.201,377.695 -41.679,378.515 -68.019,387.974 
@@ -104,39 +103,37 @@ const Map: React.FC<IMapProps> = ({
 			 72.081,202.014 98.559,194.774 120.942,193.855 123.64,191.554 147.442,213.934 155.442,216.274 162.102,218.874 168.779,218.874 
 			 173.779,221.614 180.38,223.614 187.442,223.614 193.102,222.274 196.442,220.934 201.779,218.874 210.442,215.274 224.442,214.934 
 			 229.442,216.934 242.8,215.614 248.779,218.874 "
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Chlef", data["Chlef"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x30_2_Chlef"
-          fill={data["Chlef"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M238.734-160.41
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Chlef", data["Chlef"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x30_2_Chlef"
+            fill={data["Chlef"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M238.734-160.41
 		l0.508-3.518l-2.536-1.818l-1.364-3.214l0.514-2.198l-1.6,0.358l-1.36-1.406l-0.008-2.038l2.66-1.77l-3.658-1.072l2.392-2.338
 		l-2.992-3.244l0.26-2.344l4.458-3.28l2.196-4.934l-8.664,1.306l-5.338-1.374l-3.18,2.402l-8.416,0.628l-6.11,2.364l-1.98,3.374
 		l-6.23,2.496l-2,6.566l4.11,0.642l4.346-1.602l0.934,3.788l1.074,0.042l-1.654,3.374l1.018-0.314l1.038,3.994l3.55-1.326
 		l-0.694,0.488l1.186,0.082l1.082,2.358l3.126,1.97l5.676-1.626l4.344,6.574l0.12-2.828l1.036-0.666l-0.768-0.696l4.524-1.24
 		l0.072-1.73l2.438-2.328l2.072,3.752L238.734-160.41L238.734-160.41z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Laghouat", data["Laghouat"]?.value ?? 0)
-        }
-      >
-        
-        <polygon
-          className="state"
-          id="_x30_3_Laghouat"
-          fill={data["Laghouat"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="358.52,-11.346 
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Laghouat", data["Laghouat"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x30_3_Laghouat"
+            fill={data["Laghouat"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="358.52,-11.346 
 	332.361,-13.146 330.822,-12.306 325.462,-14.526 323.639,-13.745 323.04,-14.766 322.202,-13.266 321.322,-13.906 319.441,-12.426 
 	303.741,-11.706 311.059,-7.245 311.721,-1.446 294.621,-5.526 283.879,-2.306 262.221,-0.406 256.001,-13.545 256.299,-16.605 
 	255.02,-18.366 263.001,-18.646 263.419,-26.446 259.259,-25.545 252.222,-27.806 252.64,-31.166 246.4,-31.726 246.962,-37.446 
@@ -146,22 +143,24 @@ const Map: React.FC<IMapProps> = ({
 	267.841,-84.886 270.341,-77.706 271.221,-77.866 277.981,-68.346 280.379,-67.686 284.9,-69.826 286.299,-69.306 286.241,-72.206 
 	290.78,-76.786 293.679,-75.266 293.441,-74.406 295.941,-75.266 300.702,-61.846 300.4,-59.426 303.621,-53.026 314.101,-50.006 
 	322.059,-42.826 324.879,-38.166 341.139,-32.046 344.121,-29.926 352.139,-22.086 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Oum El Bouaghi", data["Oum El Bouaghi"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x30_4_Oum_El-Bouaghi"
-          fill={data["Oum El Bouaghi"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M490.908-165.62
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.(
+              "Oum El Bouaghi",
+              data["Oum El Bouaghi"]?.value ?? 0
+            )
+          }
+        >
+          <path
+            className="state"
+            id="_x30_4_Oum_El-Bouaghi"
+            fill={data["Oum El Bouaghi"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M490.908-165.62
 	l1.402,0.772l1.064,4.234l3.23,1.478l-1.544,1.378l0.28,2.186l2.622,5.318l-8.094,3.242l-3.758,5.596l-1.248,0.226l-1.32-2.102
 	l-1.384-0.12l-0.666-2.382l-0.786-0.628l-1.2,1.202l0.358-1.158l-2.626-1.85l-0.82,2.8l-2.096,0.616l0.128-4.328l-3.54-1.752
 	l-0.238,1.096l-3.632-0.538l-1.914,4.018l-3.298-0.966l0.82-2.032l-1.23-1.06l-8.064,1.216l-1.548-3.19l-4.216-4.826l-3.138-1.432
@@ -170,18 +169,17 @@ const Map: React.FC<IMapProps> = ({
 	l-0.928-1.608l2.244,1.206l0.75-2.138l4.486-0.318l0.526-2.888l2.892,2.332l7.242,0.132l-0.404,2.512l2.53,1.102l-0.392,1.914
 	l1.996,0.332l5.57-2.744l1.366-3.55l2.514-0.152l0.846,4.526l1.472,0.09l1.3,4.24l2.052,2.662l5.346,1.88l-0.062,2.956l5.63-0.428
 	l-0.708-3.074L490.908-165.62L490.908-165.62z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Batna", data["Batna"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x30_5_Batna"
-          fill={data["Batna"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M445.635-105.596
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Batna", data["Batna"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x30_5_Batna"
+            fill={data["Batna"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M445.635-105.596
 	l-1.268-4.29l1.622-1.59l-1.224-0.968l0.998-1.16l-2.69-4.512l-1.604-0.292l0.802-1.688l-0.878-2.702l2.614-2.86l-0.46-5.27
 	l3.286-2.792l-2.102-0.438l0.352-2.876l-1.264-2.666l2.984-2.772l4.834-1.196l1.226-3.028l-1.482-2.982l0.428-2.676l-4.216-4.826
 	l-3.138-1.432l-5.342,2.43l-0.704-1.034l0.928-0.77l-1.07-0.73l0.722-1.836l-5.214-0.532l-0.218-1.174l-3.1,2.63l-4.866-2.596
@@ -193,53 +191,56 @@ const Map: React.FC<IMapProps> = ({
 	l7.12-4.796l5.634,3.762l3.716-0.438l-4.494,4.242l1.988,2.746l-1.654,2.85l1.528-0.422l1.95,3.534l4.526-5.67l2.05,0.776
 	l-0.17,2.37l4.26,1.398l1.37-2.896l4.118-0.522l3.302-2.224l2.582,3.252l-1.562,2.252l1.01,1.888l-0.872,5.08l4.912,3.942
 	L445.635-105.596L445.635-105.596z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Béjaïa", data["Béjaïa"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x30_6_Béjaïa"
-          fill={data["Béjaïa"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M364.848-188.482
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Béjaïa", data["Béjaïa"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x30_6_Béjaïa"
+            fill={data["Béjaïa"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M364.848-188.482
 	l-0.672,2.248l-4.032,1.838l-0.07,4.98l-8.358,2.196l-1.554-3.402l0.444-1.202l-1.5-1.98l1.484-0.976l0.3-2.61l-1.356-2.65
 	l3.59-1.662l4.358-4.886l-0.814-1.322l2.518-3.162l-3.556-1.888l0.296-1.292l2.458-0.72l1.41,1.078l1.342-1.308l-0.138-2.676
 	l-2.798-3.904l7.224-0.812l6.8,2.122l4.076,2.878l3.742,0.728l-0.886,3.43l5.772,3.124l8.652-0.62l0.058,2.632l1.834,0.39
 	l-0.366,2.954l-4.776,2.146l0.502,1.366l-2.63,2.946l0.94,1.84l-1.496,0.75l-3.312,0.482l0.052-1.87l-1.14,0.396l0.048-5.382
 	l1.07-1.388l-4.318-2.93l-0.076,0.896l-1.858-0.176l-0.892,2.756l-7.242-0.96l-0.096,2.698L364.848-188.482L364.848-188.482z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Biskra", data["Biskra"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x30_7_Biskra"
-          fill={data["Biskra"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M452.54-93.946l-2.1,4.08
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Biskra", data["Biskra"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x30_7_Biskra"
+            fill={data["Biskra"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M452.54-93.946l-2.1,4.08
 	l1.04,3.86l-3.46,4.38v0.02l-3.3,1.16l-2.9-2.8l-11.46-4.08l-10.62,2.6l-0.14-0.02l-23.72-2.52l-4.4-2.92l-1.16-2.98v-3l-1.76-1.94
 	l-2.5-1.86l-0.3-2.08l-1.88-1.62l-1.5-3.94c0,0-3.88-0.14-7.46-0.32l2.08-0.62l1.36-3.18l1.08-0.14l-1.1-0.6l-0.88-6.98l1.16-0.68
 	l4.04,1.92l1.46,2.22l2.04-0.96l3,1.42l1.12-0.16l0.68-2.22l7.82-0.2l3.58-1.9l0.32-1.88l-1.32-1.94l-2.9-0.56l-0.64-1.9l4.42,0.3
 	l7.12-4.8l5.64,3.76l3.72-0.44l-4.5,4.24l1.98,2.76l-1.64,2.84l1.52-0.42l1.96,3.54l4.52-5.68l2.04,0.78l-0.16,2.38l4.26,1.4
 	l1.36-2.9l4.12-0.52l3.3-2.24l2.6,3.26l-1.58,2.26l1.02,1.88l-0.88,5.08l4.92,3.94l2.08-0.74v0.02l2.16-1.22l1.48-3.42l2.28-0.14
 	l-0.8,0.96l2.1,2.1l-0.84,2l1.64-0.4l-1.44,4.78L452.54-93.946z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Béchar", data["Béchar"]?.value ?? 0)}>
-        
-        <polygon
-          className="state"
-          id="_x30_8_Béchar"
-          fill={data["Béchar"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="180.38,106.915 
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Béchar", data["Béchar"]?.value ?? 0)}
+        >
+          <polygon
+            className="state"
+            id="_x30_8_Béchar"
+            fill={data["Béchar"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="180.38,106.915 
 	180.002,107.355 170.942,105.894 167.559,104.035 150.559,104.035 147.559,99.774 143.442,99.774 137.559,94.274 132.442,94.274 
 	130.559,95.894 119.559,96.274 116.559,98.394 109.822,98.654 108.442,100.154 99.822,101.035 97.059,97.774 91.201,98.514 
 	88.442,100.394 66.822,100.394 64.822,102.654 45.442,102.394 35.442,111.774 29.322,111.774 26.322,110.394 23.559,112.514 
@@ -253,56 +254,55 @@ const Map: React.FC<IMapProps> = ({
 	120.42,28.975 121.02,32.094 132.68,25.894 146.26,29.695 149.88,27.035 154.701,28.075 157.962,23.274 156.059,32.054 
 	151.9,31.094 149.701,32.734 147.602,37.174 147.322,45.535 148.68,50.094 147.3,50.214 147.3,50.234 147.66,52.154 146.462,53.855 
 	148.361,56.214 145.88,58.635 148.38,62.654 146.361,65.054 146.42,68.794 148.119,72.434 153.962,77.135 152.322,83.094 "
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Blida", data["Blida"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x30_9_Blida"
-          fill={data["Blida"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M304.962-191.188
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Blida", data["Blida"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x30_9_Blida"
+            fill={data["Blida"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M304.962-191.188
 	l0.494-2.556l-1.17-0.54l0.768-0.828l-0.94-1.714l1.072-0.958l-1.772,0.698l-1.512-2.62l-2.018,1.542l-1.22-0.606l-1.404,3.614
 	l-2.236,0.15l0.216-2.164l-2.982,2.14l-7.542-3.166l0.678,2.046l-4.222,1.198l-2.954,3.294l-2.12,0.28l0.886,1.604l-0.896,1.28
 	l-3.136-0.604l-2.074,2.928l5.986,4.212l3.018-2.174l5.786,0.408l3.136-2.354l1.342,3.014l2.96,0.016l1.736-1.934l-0.378-2.716
 	l0.946,1.912l1.466-1.192l1.386,1.396l2.318-2.308l0.166-2.762l3.26,0.538L304.962-191.188L304.962-191.188z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Bouira", data["Bouira"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x31_0_Bouira"
-          fill={data["Bouira"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M337.561-167.726
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Bouira", data["Bouira"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x31_0_Bouira"
+            fill={data["Bouira"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M337.561-167.726
 	l2.936-2.266l0.37-4.77l3.416-1.722l1.59-2.484l2.722,0.184l1.566-1.836l0.444-1.202l-1.5-1.98l1.484-0.976l0.3-2.61l-1.356-2.65
 	l-5.028,0.532l-0.548-1.068l-2.018,1.084l-11.308,0.326l-2.666-0.658l-1.872-3.274l-1.564,0.08l-1.782-2.474l-9.43-1.418
 	l-0.96,1.968l-2.732,1.428l-4.176-0.236l-0.494,2.556l5.444,5.258l3.12-2.96l2.716,1.408l-0.876,1.372l1.992,2.782l-2.14,1.196
 	l-0.884,2.532l2.14,1.956l-0.362,1.618l-2.852,0.828l-0.456,1.708l1.312,2.084l-0.816,0.97l-1.798,1.87l-2.028-0.03l0.958,1.562
 	l5.576,0.868l2.814,5.298l1.064-1.616l3.074,0.306l1.31,1.848l2.144,0.444l0.698,2.01l1.606,0.096l2.538-2.428l5.084,1.78
 	l-0.888-2.77L337.561-167.726L337.561-167.726z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Tamanrasset", data["Tamanrasset"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x31_1_Tamenrasset"
-          fill={data["Tamanrasset"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M644.7,510.755
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Tamanrasset", data["Tamanrasset"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x31_1_Tamenrasset"
+            fill={data["Tamanrasset"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M644.7,510.755
 	l-115.12,83.82c-2.74-1.96-5.34-3.88-5.9-4.54c-1.24-1.52-11.74-10-11.74-10h-5.26l-2.24,2l-4.5-0.76l-18.26-13.24h-12.24l-2.5,5
 	l-2.26,7.48l-3,7.26l-3,6v8.74h-25l-5.24-5.74l-19.24,0.26l-10.52-6.76l-8.24-0.5l-4.24-1.5l-4.26,2.5l-1.74,7.26l1.48,4.48l-1.48,4
 	l-2.26,9.26l-8.74,1.74l-10.26,10.26h-8.74l-2.76-3l1.24-9.74l1.26-3v-5.52l-2.5-3v-4.48l-4-5l-7.5-2.26l-3.5-3.26l-9.5-0.48
@@ -314,20 +314,21 @@ const Map: React.FC<IMapProps> = ({
 	l0.84,3.84l-5.64,4.7l-2.12,6.12l2.36,3.1l4.5,1.2l0.28,2.02l3.06,2.26l11.86,32.28l10.12,12.28l3.26,8.34l7.38,12.48l5.66,4.36
 	l8.96,0.28l11.18,16.06l-0.48,7.56l2.08,21.88l11.16,24.72l-3.94,4.48l12.48,8.78l34.36-8.32l25.78-19.24l27.8-1.64l3.32,2.04
 	l4.42-0.1l14.96,8.46L644.7,510.755z"
-        />
-      </g>
-      <g
-        onClick={() => onWilayaClick?.("Tébessa", data["Tébessa"]?.value ?? 0)}
-      >
-        
-        <polygon
-          className="state"
-          id="_x31_2_Tébessa"
-          fill={data["Tébessa"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Tébessa", data["Tébessa"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x31_2_Tébessa"
+            fill={data["Tébessa"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	518.64,-118.226 515.84,-116.606 517.7,-109.166 519.46,-107.206 516.2,-104.586 518,-103.006 515.24,-100.266 515.7,-98.886 
 	513.5,-98.666 511.299,-95.326 500.6,-89.346 499.119,-80.866 482.6,-81.686 474.079,-84.666 475.619,-94.826 479.84,-102.706 
 	479.9,-106.105 478.619,-108.006 480.119,-112.026 478.379,-116.786 475.84,-116.986 474.52,-115.046 473.639,-112.346 
@@ -337,38 +338,40 @@ const Map: React.FC<IMapProps> = ({
 	491.699,-168.346 495.46,-165.546 498.699,-165.605 502.9,-170.305 505.419,-170.006 510.419,-172.226 514.76,-170.066 
 	513.44,-167.486 514.38,-166.665 514.32,-158.346 518.24,-155.566 518.88,-147.986 520.1,-146.046 517.32,-142.226 517.46,-137.025 
 	521.6,-133.786 524.66,-133.646 519.96,-126.086 "
-        />
-      </g>
-      <g
-        onClick={() => onWilayaClick?.("Tlemcen", data["Tlemcen"]?.value ?? 0)}
-      >
-        
-        <path
-          className="state"
-          id="_x31_3_Tlemcen"
-          fill={data["Tlemcen"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M123.968-119.174
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Tlemcen", data["Tlemcen"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x31_3_Tlemcen"
+            fill={data["Tlemcen"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M123.968-119.174
 	l-1.372,0.14l-0.524-1.82l-6.978-3.496l-0.662,0.66l-0.744-1.544l-2.162,0.91l-4.676-1.586l-1.836,2.672l-2.166,0.528l-2.102-1.336
 	l0.404-1.908l-1.694-1.246l-7.996,5.854l-1.344-0.71l-4.346,2.336l-6.894,0.496l-3.676-1.688l-2.334,0.828l-0.206,1.9l5.204,4.898
 	l2.112,1.602l2.776-0.436l0.054,2.98l3.234,1.92l0.178,1.766l6.256,3.432l-5.002,6.418l1.538,0.628l2.74,4.762l2.57,1.164
 	l-4.238,5.132l3.164,4.312l-0.426,3.614l2.396,7.512l7.22-5.24l9.986,0.044l2.452-2.816l3.058-0.966l12.186-11.266l-0.724-1.586
 	l-1.914-0.396l3.218-1.902l2.57-5.506l-0.46-1.372l0.994,0.072l-0.548-2.01l-4.75,0.542l0.866-6.388l-2.354,0.482l1.606-2.27
 	l-2.382-0.092l-1.012-3.654l2.626-4.254L123.968-119.174L123.968-119.174z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Tiaret", data["Tiaret"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x31_4_Tiaret"
-          fill={data["Tiaret"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M254.35-141.09
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Tiaret", data["Tiaret"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x31_4_Tiaret"
+            fill={data["Tiaret"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M254.35-141.09
 	l-2.654,0.524l0.442,2.792l13.554,8.214l2.1,3.676l5.374-4.598l2.102,1.592l0.656,2.25l3.496,0.836l-0.016,3.042l-1.356,0.518
 	l-2.242,4.502l2.86,2.554l-6.456,2.55l-2.894,9.322l-2.94,0.918l0.336,4.854l-6.028,0.746l-0.87,2.088l-3.956,1.772l-4.694,5.13
 	l-9.754,3.506l-3.678,4.176l-0.73,4.876l-3.288,1.954l-0.546-2.278l-7.55,4.456l1.616,2.69l-4.39,2.92l-2.238-3.154l-0.432-3.686
@@ -378,53 +381,52 @@ const Map: React.FC<IMapProps> = ({
 	l0.224-1.736l1.622,0.22l0.328-1.826l4.116,0.414l1.136-1.972l2.898-1.144l2.69,3.34l1.178-4.596l2.538,1.86l1.076-0.606
 	l2.706,1.528l0.122,2.83l3.906-0.348l2.09,3.438l1.626,0.31l0.344-2.094l1.916,1.944l7.594-0.864l4.868-2.674l-1.118,1.342
 	l3.1,0.134L254.35-141.09L254.35-141.09z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Tizi Ouzou", data["Tizi Ouzou"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x31_5_Tizi-Ouzou"
-          fill={data["Tizi Ouzou"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M358.202-211.78
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Tizi Ouzou", data["Tizi Ouzou"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x31_5_Tizi-Ouzou"
+            fill={data["Tizi Ouzou"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M358.202-211.78
 	l2.798,3.904l0.138,2.676l-1.342,1.308l-1.41-1.078l-2.458,0.72l-0.296,1.292l3.556,1.888l-2.518,3.162l0.814,1.322l-4.358,4.886
 	l-3.59,1.662l-5.028,0.532l-0.548-1.068l-2.018,1.084l-11.308,0.326l-2.666-0.658l-1.872-3.274l-1.564,0.08l-1.782-2.474
 	l-0.436-3.388l2.832-0.642l1.69,1.184l-0.33-2.578l2.712,0.626l-1.544-1.726l0.772-2.882l2.084,0.462l0.36-1.21l1.888-0.154
 	l0.09-1.56l2.708-2.326l-0.27-2.478l10.878-0.642l3.702,0.852l1.972-1.094L358.202-211.78L358.202-211.78z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Alger", data["Alger"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x31_6_Alger"
-          fill={data["Alger"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M307.54-205.556
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Alger", data["Alger"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x31_6_Alger"
+            fill={data["Alger"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M307.54-205.556
 	l-0.542,1.218l1.316-0.43l0.06,2.04l-4.556,1.49l-1.32-0.966l0.78,1.404l-1.378,1.092l-2.018,1.542l-1.22-0.606l-1.404,3.614
 	l-2.236,0.15l0.216-2.164l-2.982,2.14l-7.542-3.166l-0.27-2.894l1.22-3.23l1.8-0.348l0.546-1.888l2.41-0.47l3.664,0.176l0.986,2.402
 	l2.324,1.05l4.238-1.244l0.314-2.59L307.54-205.556L307.54-205.556z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Djelfa", data["Djelfa"]?.value ?? 0)}>
-        
-        <polygon
-          className="state"
-          id="_x31_7_Djelfa"
-          fill={data["Djelfa"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="382.679,-38.046 
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Djelfa", data["Djelfa"]?.value ?? 0)}
+        >
+          <polygon
+            className="state"
+            id="_x31_7_Djelfa"
+            fill={data["Djelfa"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="382.679,-38.046 
 	377.841,-27.786 382.259,-4.906 358.52,-11.346 352.139,-22.086 344.121,-29.926 341.139,-32.046 324.879,-38.166 322.082,-42.826 
 	322.059,-42.826 314.101,-50.006 303.621,-53.026 300.4,-59.426 300.702,-61.846 295.941,-75.266 293.441,-74.406 293.679,-75.266 
 	290.78,-76.786 286.241,-72.206 286.299,-69.306 284.9,-69.826 280.379,-67.686 277.981,-68.346 271.221,-77.866 270.341,-77.706 
@@ -440,34 +442,32 @@ const Map: React.FC<IMapProps> = ({
 	348.621,-70.006 349.4,-67.026 354.101,-66.245 355.241,-64.786 352.841,-64.786 350.101,-61.846 347.419,-61.586 346.621,-60.546 
 	347.52,-59.166 360.66,-53.506 362.822,-50.546 369.341,-49.306 370.121,-47.406 374.04,-48.046 375.501,-45.605 383.499,-43.605 
 	382.462,-41.846 "
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Jijel", data["Jijel"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x31_8_Jijel"
-          fill={data["Jijel"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M406.661-196.316
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Jijel", data["Jijel"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x31_8_Jijel"
+            fill={data["Jijel"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M406.661-196.316
 	l2.226-0.676l2.734,1.444l3.008-0.892l2.484-3.342l9.712,1.624l3.722-2.464l0.866,1.276l5.484,0.962l-0.508-2.774l1.656-0.388
 	l0.6-1.568l-5.932-2.852l-1.398-6.618l-3.27-0.706l0.556-2.366l-0.916-1.32l-11.544,5.988l-6.968,1.708l-1.714-1.134l-3.352,0.658
 	l-4.76,2.886l-2.068,4.076l-3.702,1.87l0.058,2.632l1.834,0.39l1.502-0.048l0.806,3.708l1.958,0.154l1.984-1.916l2.498,1.352
 	L406.661-196.316L406.661-196.316z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Sétif", data["Sétif"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x31_9_Sétif"
-          fill={data["Sétif"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M406.661-196.316
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Sétif", data["Sétif"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x31_9_Sétif"
+            fill={data["Sétif"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M406.661-196.316
 	l1.114,1.434l-0.25,4.096l2.488,1.906l-0.228,2.694l2.788,0.852l-0.194,2.342l4.376,4.734l-1.954,1.042l0.098,3.736l3.426,0.798
 	l0.572,4.17l-1.38,1.206l2.324,2.426l-2.4,2.586l-1.93,1.14l0.89,2.326l-5.612-4.836l-2.428,0.634l-2.848,3.118l0.242,1.548
 	l2.424,0.806l-1.584,2.604l-1.362-0.478l-1.004,1.082l-4.59-1.896l-0.484,1.37l-1.592-0.156l-2.764,2.184l0.468,2.002l-1.56,3.518
@@ -476,58 +476,60 @@ const Map: React.FC<IMapProps> = ({
 	l0.598-3.75l-2.516-1.344l5.032-2.9l0.096-2.698l7.242,0.96l0.892-2.756l1.858,0.176l0.076-0.896l4.318,2.93l-1.07,1.388
 	l-0.048,5.382l1.14-0.396l-0.052,1.87l3.312-0.482l1.496-0.75l-0.94-1.84l2.63-2.946l-0.502-1.366l4.776-2.146l0.366-2.954
 	l1.502-0.048l0.806,3.708l1.958,0.154l1.984-1.916l2.498,1.352L406.661-196.316L406.661-196.316z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Saïda", data["Saïda"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x32_0_Saida"
-          fill={data["Saïda"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M202.492-83.178
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Saïda", data["Saïda"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x32_0_Saida"
+            fill={data["Saïda"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M202.492-83.178
 	l-5.706-1.468l-9.166,6.268l-3.464-4.592l-5.798,4.018l-4.346-0.506l-4.19-4.254l-4.662-1.526l-3-2.996l-4.4,2.496l-0.274-4.306
 	l-1.96-2.192l0.512-3.02l4.982,2.498l1.296,3.766l2.24-3.332l-2.756-5.68l-4.226-2.748l-0.588-2.208l-3.54-0.326l0.808-2.382
 	l-2.658-1.802l2.328-1.602l-0.792-4.174l3.624-0.394l-0.97-3.526l0.704-1.892l2.636-0.806l1.964,0.014l1.33-2.48l0.69,3.952
 	l5.166-0.378l2.602,1.736l2.162-0.194l0.41,1.812l2.02,1.324l4.988-3.298l1.548,1.78l1.998,0.24l3.082-3.036l6.594-0.776
 	l0.562,1.982l2.806,1.264l3.19,4.866l-6.324,4.658l1.112,1.846l-0.77,3.416l3.462,6.13l2.122-0.916l0.9,2.36l-1.51,1.062
 	l0.632,1.062l5.948,2.448L202.492-83.178L202.492-83.178z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Skikda", data["Skikda"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x32_1_Skikda"
-          fill={data["Skikda"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M473.455-204.288
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Skikda", data["Skikda"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x32_1_Skikda"
+            fill={data["Skikda"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M473.455-204.288
 	l-1.076,0.7l-0.836-0.892l-1.1,2.102l-7.168,2.528l-1.306,1.744l0.84,2.488l-5.258,1.396l-0.122,3.084l-2.508-0.26l-0.798-1.4
 	l-2.248,0.416l0.414-4.026l1.94-2.036l-3.6,0.722l-4.548-0.848l-0.738-2.648l-2.136,2.776l-4.376-0.294l-1.934,0.348l-0.508-2.774
 	l1.656-0.388l0.6-1.568l-5.932-2.852l-1.398-6.618l-3.27-0.706l0.556-2.366l-0.916-1.32l-0.974-2.092l0.952-2.266l2.922-2.328
 	l5.598-1.284l3.236,1.656l1.538,4.082l5.768,1.332l1.284-1.046l0.78,0.96l3.292-0.786l1.558,3.198l2.966,0.476l5.276-2.188
 	l3.318,0.082l4.084-3.856l-0.558-2.09l-3.672-2.596l4.936,0.12l1.73,1.41l-0.54,1.298l1.868,3.116l-0.206,1.056l-1.236-0.218
 	l2.69,2.506l1.294,6.848l-0.152,1.792l-2.392,0.982L473.455-204.288L473.455-204.288z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Sidi Bel Abbès", data["Sidi Bel Abbès"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x32_2_Sidi_Bel_Abbes"
-          fill={data["Sidi Bel Abbès"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M144.74-136.602
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.(
+              "Sidi Bel Abbès",
+              data["Sidi Bel Abbès"]?.value ?? 0
+            )
+          }
+        >
+          <path
+            className="state"
+            id="_x32_2_Sidi_Bel_Abbes"
+            fill={data["Sidi Bel Abbès"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M144.74-136.602
 	l-1.284,1.986l0.48,1.928l-3.006,1.494l-0.364-1.344l-5.676,0.994l-0.136,1.456l-1.936,0.912l-1.626-1.096l-1.562,2.79l-1.346-0.358
 	l0.572,3.892l-2.76,0.922l-0.496,2.902l-1.636,0.95l3.884,2.124l-2.626,4.254l1.012,3.654l2.382,0.092l-1.606,2.27l2.354-0.482
 	l-0.866,6.388l4.75-0.542l0.548,2.01l-0.994-0.072l0.46,1.372l-2.57,5.506l-3.218,1.902l1.914,0.396l0.724,1.586L117.925-77.45
@@ -537,73 +539,73 @@ const Map: React.FC<IMapProps> = ({
 	l2.328-1.602l-0.792-4.174l3.624-0.394l-0.97-3.526l0.704-1.892l2.636-0.806l-1.608-4.406l0.75-1.93l2.954-1.422l-1.91-0.71
 	l-2.44,2.038l-0.436-1.098l2.624-1.714l0.758-1.974l-5.454-1.71l-0.704-1.264l-1.504,1.764l-3.126-0.24l0.464-4.508l-3.176,1.204
 	L144.74-136.602L144.74-136.602z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Annaba", data["Annaba"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x32_3_Annaba"
-          fill={data["Annaba"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M486.755-204.574
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Annaba", data["Annaba"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x32_3_Annaba"
+            fill={data["Annaba"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M486.755-204.574
 	l1.144-2.894l-0.854-1.494l1.938-2.28l1.878,0.286l0.062-2.656l2.278-0.018l-0.732-1.37l-2.384-1.736l1.066-4.514l-3.542,1.214
 	l-2.08-1.422l-1.428,1.006l-4.718-3.972l-4.286,0.378l-0.96-2.258l-4.146,0.698l1.73,1.41l-0.54,1.298l1.868,3.116l-0.204,1.056
 	l-1.236-0.218l2.69,2.506l1.294,6.848l-0.152,1.792l-2.392,0.982l0.402,2.532l2.302-0.244l0.876,1.752l0.398-1.484l2.208-1.016
 	l0.35,2.374l5.426,1.006L486.755-204.574L486.755-204.574z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Guelma", data["Guelma"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x32_4_Guelma"
-          fill={data["Guelma"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M486.755-204.574
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Guelma", data["Guelma"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x32_4_Guelma"
+            fill={data["Guelma"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M486.755-204.574
 	l1.872-0.618l1.372,1.002l2.378,5.22l2.338-0.764l0.402,1.086l-0.094-1.542l2.596,1.168l1.84,3.7l-3.664,3.088l-2.046-0.824
 	l-0.39,2.634l2.158,2.764l-0.748,0.874l-4.436,0.344l-4.32,4.162l-2.39-0.544l-5.038,1.868l-5.706-1.078l-0.99,2.692l1.5,1.838
 	l-2.514,0.152l-1.366,3.55l-5.57,2.744l-1.996-0.332l0.392-1.914l-2.53-1.102l0.404-2.512l-0.156-1.14l1.712-0.948l0.212-3.372
 	l-1.122-2.886l-2.446-0.44l1.198-1.432l-2.104-1.114l1.068-1.102l-1.146-1.782l0.122-3.084l5.258-1.396l-0.84-2.488l1.306-1.744
 	l7.168-2.528l1.1-2.102l0.836,0.892l1.076-0.7l2.302-0.244l0.876,1.752l0.398-1.484l2.208-1.016l0.35,2.374l5.426,1.006
 	L486.755-204.574L486.755-204.574z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Constantine", data["Constantine"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x32_5_Constantine"
-          fill={data["Constantine"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M460.215-176.918
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Constantine", data["Constantine"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x32_5_Constantine"
+            fill={data["Constantine"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M460.215-176.918
 	l-0.156-1.14l1.712-0.948l0.212-3.372l-1.122-2.886l-2.446-0.44l1.198-1.432l-2.104-1.114l1.068-1.102l-1.146-1.782l-2.508-0.26
 	l-0.798-1.4l-2.248,0.416l0.414-4.026l1.94-2.036l-3.6,0.722l-4.548-0.848l-0.738-2.648l-2.136,2.776l-4.376-0.294l-0.04,3.198
 	l-6.596,1.53l0.57,4.042l-1.842,3.756l2.638-0.81l2.252,1.758l-0.528,2.976l1.576,0.992l2.036-0.59l1.874,1.606l-0.216,2.708
 	l-0.762,0.874l1.188,2.32l2.02,0.738l-0.928-1.608l2.244,1.206l0.75-2.138l4.486-0.318l0.526-2.888l2.892,2.332L460.215-176.918
 	L460.215-176.918z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Médéa", data["Médéa"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x32_6_Médéa"
-          fill={data["Médéa"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M318.817-160.868
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Médéa", data["Médéa"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x32_6_Médéa"
+            fill={data["Médéa"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M318.817-160.868
 	l0.546,1.59l-2.284,1.372l1.1,0.734l-4.04,1.37l1.72,2.562l0.072,5.932l-5.418-8.31l-1.788,0.28l0.812,1.542l-0.98,0.99l-2.18,0.098
 	l-1.708-3.432l-2.064,2.04l0.208,2.412l-1.506,2.74l-5.574,1.402l-0.37-4.4l-1.398,0.288l-1.388-4.674l-5.17,1.414l1.352,10.01
 	l-1.158-0.518l-3.66,2.722l-3.208,5.128l-2.586,1.324l-5.398-3.818l-0.458,1.12l-4.948,1.624l-4.278,0.334l-1.318-4.726l1.42-3.936
@@ -613,38 +615,38 @@ const Map: React.FC<IMapProps> = ({
 	l3.26,0.538l0.96-1.074l5.444,5.258l3.12-2.96l2.716,1.408l-0.876,1.372l1.992,2.782l-2.14,1.196l-0.884,2.532l2.14,1.956
 	l-0.362,1.618l-2.852,0.828l-0.456,1.708l1.312,2.084l-0.816,0.97l-1.798,1.87l-2.028-0.03l0.958,1.562l5.576,0.868L318.817-160.868
 	L318.817-160.868z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Mostaganem", data["Mostaganem"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x32_7_Mostaganem"
-          fill={data["Mostaganem"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M162.14-154.198
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Mostaganem", data["Mostaganem"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x32_7_Mostaganem"
+            fill={data["Mostaganem"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M162.14-154.198
 	l5.928-3.698l4.676-9.342l3.69-3.884l18.374-10.79l3.48-0.116l-2,6.566l-3.958,4.942l2.578,2.7l-1.268,1.398l0.718,1.742
 	l-4.252,0.186l-1.106,1.21l-2.452-1.144l-1.692,2.036l0.626,1.534l1.348-0.072l-1.18,1.984l0.454,1.82l-2.664,2.874l-1.754-0.746
 	l-1.734,1.078l-3.488,4.148l-1.806-0.272l-1.212,1.926l-0.06-1.526l-2.14,0.36l-2.058-2.854l-4.504,1.198L162.14-154.198
 	L162.14-154.198z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("M'Sila", data["M'Sila"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x32_8_M_x27_sila"
-          fill={data["M'Sila"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M391.46-148.006
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("M'Sila", data["M'Sila"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x32_8_M_x27_sila"
+            fill={data["M'Sila"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M391.46-148.006
 	l-5.32,5.94l-3.64,1.8l-1.44-2.12l-2.12-0.04l-1.66,1.84l-0.14-1.56l-1.92,3l-3.9-3.38l1.64,8.8l-0.74,5.08l-1.84,3.1l-1.06-0.38
 	l-2.36,2.36l0.38,1.2l5.86,0.12l4.26,2.8l0.88,6.98l1.1,0.6l-1.08,0.14l-1.36,3.18l-2.08,0.62c-0.02,0-0.02,0-0.02,0l-8.78,2.64
 	l-1.88,3l-2,0.34l2.6,2.18l-2.04,1.08l-1.32-0.88l-3.66,2.28l-9.62,0.08l-1.76,3.66l-4.38,3.66l1.06,0.6l0.82,6.18l2.44,2.54
@@ -654,20 +656,21 @@ const Map: React.FC<IMapProps> = ({
 	l1.06-1.62l3.08,0.3l1.3,1.86l2.14,0.44l0.7,2l1.62,0.1l2.54-2.42l5.08,1.78l-0.9-2.78l2.12-6.52l1.14,2.2l4.42-1.52l5.52,1.96
 	l6.78-2.92l1.72,5.56l-3.22,1.24l-1.38,4.2l5.64,0.58l-0.72-1.98l2.66-1.28l-0.78,2.18l1.32,1.54l4.16-3.14l5.44-1.06l2.64,3.34
 	l2.34-0.1l0.36,2.44l2.82-1.02l-0.34,1.24l2.94,2.1l2.22-0.48l0.98,1.02l-0.84,1.08l1.1,1.62L391.46-148.006z"
-        />
-      </g>
-      <g
-        onClick={() => onWilayaClick?.("Mascara", data["Mascara"]?.value ?? 0)}
-      >
-        
-        <path
-          className="state"
-          id="_x32_9_Mascara"
-          fill={data["Mascara"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M176.464-149.777
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Mascara", data["Mascara"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x32_9_Mascara"
+            fill={data["Mascara"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M176.464-149.777
 	l1.156,0.388l2.434,7.222l3.432-0.986l0.25,1.048l1.716-1.222l2.564,3.604l3.78-0.082l1.836,1.834l3.442-0.17l0.59,1.324
 	l4.094,0.636l2.982,3.108l-1.378,0.562l-1.746,4.212l-2.224,0.704l-3.042-1.578l-2.166,0.322l-2.35,2.82l0.492,1.898l-3.104,2.2
 	l-2.144,3.54l-3.082,3.036l-1.998-0.24l-1.548-1.78l-4.988,3.298l-2.02-1.324l-0.41-1.812l-2.162,0.194l-2.602-1.736l-5.166,0.378
@@ -675,57 +678,56 @@ const Map: React.FC<IMapProps> = ({
 	l0.758-1.974l-5.454-1.71l-0.704-1.264l-1.504,1.764l-3.126-0.24l0.464-4.508l-3.176,1.204l-1.574-0.762l0.638-1.498l2.06-0.17
 	l-0.74-1.9l3.166-0.76l0.526-3.482l5.25-4.208l-1.334-0.012l1.778-3.066l2.864,2.178l3.162-4.58l2.576,3.154l4.504-1.198
 	l2.058,2.854l2.14-0.36l0.06,1.526l1.212-1.926L176.464-149.777L176.464-149.777z"
-        />
-      </g>
-      <g
-        onClick={() => onWilayaClick?.("Ouargla", data["Ouargla"]?.value ?? 0)}
-      >
-        
-        <path
-          className="state"
-          id="_x33_0_Ouargla"
-          fill={data["Ouargla"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M582,103.394
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Ouargla", data["Ouargla"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x33_0_Ouargla"
+            fill={data["Ouargla"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M582,103.394
 	l-126.98,32.92l-5.6-1.78l-31.76,17.82l-86.24,66.52l0.3-0.82l-35.06-28.36l16.46-7.26l13.52-28.18l3.16-2.18l20.98-73.42l6.34-16.3
 	l0.64-14.24l0.9-19.78l13.52-14.62l10.08-18.62l-4.42-22.88l4.84-10.26l7.84,7l1.82-3.72l17.6-0.32v2.24l2.66,3.62
 	c0,0-0.58,11.26,0,11.08c0.6-0.16,5.68,4.18,5.68,4.18l1.92,4.08l1.58,1.74l5.5,1.76l0.4,11.82l12.84,17.08l4.08,0.42l14.5,5.18
 	l5.52,2.22l5.06,2.26l3.3,1.62l6.78,0.8l79.46-8.52L582,103.394z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Oran", data["Oran"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x33_1_Oran"
-          fill={data["Oran"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M144.74-136.602l0.638-1.498
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Oran", data["Oran"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x33_1_Oran"
+            fill={data["Oran"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M144.74-136.602l0.638-1.498
 	l2.06-0.17l-0.74-1.9l3.166-0.76l0.526-3.482l5.25-4.208l-1.334-0.012l1.778-3.066l2.864,2.178l3.194-4.678l-6.864-1.85
 	l-1.272-1.468l0.56-1.524l-1.792-1.692l-1.962,0.05l-1.35,1.342l-3,0.22l-0.66,4.402l-4.986,3.834l-2.652,0.022l-0.812-1.52
 	l-5.098-1.476l-1.502,2.678l-1.704,0.508l-1.588-1.18l-5.218,4.528l2.682,2.858l-0.444,1.434l2.016,0.014l-0.766,2.038l-1.786,0.502
 	l0.348,3.182l0.024-1.242l1.788-0.09l-0.404-1.192l1.642,1.314l3.14,0.042l10.132-3.248l1.552,5.842l-1.544,1.128l-0.054,2.202
 	l0.364,1.344l3.006-1.494l-0.48-1.928L144.74-136.602L144.74-136.602z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("El Bayadh", data["El Bayadh"]?.value ?? 0)
-        }
-      >
-        
-        <polygon
-          className="state"
-          id="_x33_2_El_Bayadh"
-          fill={data["El Bayadh"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("El Bayadh", data["El Bayadh"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x33_2_El_Bayadh"
+            fill={data["El Bayadh"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	262.039,30.674 263.481,47.894 254.18,58.195 212.02,84.554 180.38,106.915 152.322,83.094 153.962,77.135 148.119,72.434 
 	146.42,68.794 146.361,65.054 148.38,62.654 145.88,58.635 148.361,56.214 146.462,53.855 147.66,52.154 147.3,50.234 147.3,50.214 
 	148.68,50.094 147.322,45.535 147.602,37.174 149.701,32.734 151.9,31.094 156.059,32.054 157.962,23.274 163.942,11.755 
@@ -737,18 +739,19 @@ const Map: React.FC<IMapProps> = ({
 	231.88,-55.086 238.861,-56.726 242.52,-53.546 243.66,-50.446 243.16,-45.126 246.081,-44.306 246.322,-42.326 248.602,-40.306 
 	246.962,-37.446 246.4,-31.726 252.64,-31.166 252.222,-27.806 259.259,-25.545 263.419,-26.446 263.001,-18.646 255.02,-18.366 
 	256.299,-16.605 256.001,-13.545 262.221,-0.406 263.361,11.955 264.919,18.234 264.941,18.255 267.201,27.315 "
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Illizi", data["Illizi"]?.value ?? 0)}>
-        
-        <polygon
-          className="state"
-          id="_x33_3_Illizi"
-          fill={data["Illizi"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="625.66,376.734 
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Illizi", data["Illizi"]?.value ?? 0)}
+        >
+          <polygon
+            className="state"
+            id="_x33_3_Illizi"
+            fill={data["Illizi"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="625.66,376.734 
 	608.68,375.775 603.44,378.034 595.94,377.775 588.94,379.515 579.44,379.034 573.44,372.275 569.979,363.775 563.44,355.515 
 	556.2,355.515 547.44,361.775 545.2,366.034 541.68,366.034 537.94,367.515 531.68,371.275 529.44,380.275 516.94,380.515 
 	515.2,381.775 497.439,381.775 483.939,374.775 476.679,372.775 469.679,370.515 464.759,367.215 452.9,334.935 449.84,332.674 
@@ -758,147 +761,147 @@ const Map: React.FC<IMapProps> = ({
 	612.919,239.094 611.84,248.734 609.52,253.654 607.359,254.394 610.14,254.855 609.66,257.835 607.56,260.115 606.6,265.755 
 	606.859,270.715 611.34,285.895 614.72,290.354 614.919,301.354 613.06,307.974 597.44,315.895 595.28,322.775 592.84,325.875 
 	624.859,366.534 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.(
-            "Bordj Bou Arreridj",
-            data["Bordj Bou Arreridj"]?.value ?? 0
-          )
-        }
-      >
-        <title>
-          Bordj Bou Arreridj: {data["Bordj Bou Arreridj"]?.value ?? 0}
-        </title>
-        <path
-          className="state"
-          id="_x33_4_Bord-Bou-Arréridj"
-          fill={data["Bordj Bou Arreridj"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.(
+              "Bordj Bou Arreridj",
+              data["Bordj Bou Arreridj"]?.value ?? 0
+            )
+          }
+        >
+          <title>
+            Bordj Bou Arreridj: {data["Bordj Bou Arreridj"]?.value ?? 0}
+          </title>
+          <path
+            className="state"
+            id="_x33_4_Bord-Bou-Arréridj"
+            fill={data["Bordj Bou Arreridj"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="
 	M378.418-155.512l-0.036-3.204l4.176-0.576l-0.968-5.854l3.338-5.716l-1.938-1.944l0.254-4.156l-1.928-0.548l-2.96-5.09
 	l-2.406-0.726l-1.922,1.308l-5.704,0.594l-1.558-1.966l0.598-3.75l-2.516-1.344l-0.672,2.248l-4.032,1.838l-0.07,4.98l-8.358,2.196
 	l-1.554-3.402l-1.566,1.836l-2.722-0.184l-1.59,2.484l-3.416,1.722l-0.37,4.77l-2.936,2.266l1.14,2.208l4.422-1.536l5.51,1.976
 	l6.78-2.922l1.73,5.548l-3.234,1.25l-1.378,4.19l5.644,0.584l-0.722-1.982l2.658-1.278l-0.772,2.182l1.326,1.532l4.144-3.124
 	l5.44-1.064l2.658,3.338l2.334-0.098l0.364,2.434L378.418-155.512L378.418-155.512z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Boumerdès", data["Boumerdès"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x33_5_Boumerdès"
-          fill={data["Boumerdès"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M305.453-193.743
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Boumerdès", data["Boumerdès"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x33_5_Boumerdès"
+            fill={data["Boumerdès"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M305.453-193.743
 	l4.176,0.236l2.732-1.428l0.96-1.968l9.43,1.418l-0.436-3.388l2.832-0.642l1.69,1.184l-0.33-2.578l2.712,0.626l-1.544-1.726
 	l0.772-2.882l2.084,0.462l0.36-1.21l1.888-0.154l0.09-1.56l2.708-2.326l-0.27-2.478l-6.13-1.048l-6.484,2.07l-1.812,2.158
 	l-7.7,3.974l-5.644-0.55l-0.542,1.218l1.316-0.43l0.06,2.04l-4.556,1.49l-1.32-0.966l0.78,1.404l-1.378,1.092l1.512,2.62
 	l1.772-0.698l-1.072,0.958l0.94,1.714l-0.768,0.828L305.453-193.743L305.453-193.743z"
-        />
-      </g>
-      <g
-        onClick={() => onWilayaClick?.("El Tarf", data["El Tarf"]?.value ?? 0)}
-      >
-        
-        <path
-          className="state"
-          id="_x33_6_El-Taref"
-          fill={data["El Tarf"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M492.47-214.997
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("El Tarf", data["El Tarf"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x33_6_El-Taref"
+            fill={data["El Tarf"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M492.47-214.997
 	l0.732,1.37l-2.278,0.018l-0.062,2.656l-1.878-0.286l-1.938,2.28l0.854,1.494l-1.144,2.894l1.872-0.618l1.372,1.002l2.378,5.22
 	l2.338-0.764l0.402,1.086l-0.094-1.542l2.596,1.168l1.84,3.7l2.766-0.038l0.544,3.52l1.646-2.514l3.644-1.648l-0.652-1.506
 	l0.938-0.96l4.652-1.592l4.616-4.26l1.83-0.238l1.394-4.1l-0.848-2.294l-1.726-0.806l5.94-1.064l3.964-2.646l0.356-1.042
 	l-2.372-0.674l0.398-4.452l-8.904,2.882l-2.858-1.31l-3.644,0.546l-1.964-1.722l-9.47,5.352L492.47-214.997L492.47-214.997z"
-        />
-      </g>
-      <g
-        onClick={() => onWilayaClick?.("Tindouf", data["Tindouf"]?.value ?? 0)}
-      >
-        
-        <polygon
-          className="state"
-          id="_x33_7_Tindouf"
-          fill={data["Tindouf"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="25.18,276.815 
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Tindouf", data["Tindouf"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x33_7_Tindouf"
+            fill={data["Tindouf"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="25.18,276.815 
 	18.539,298.734 14.981,300.854 -0.399,299.734 -8.101,302.895 -12.74,306.854 -27.101,326.294 -33.179,339.734 -61.539,339.275 
 	-75.94,353.174 -101.86,361.635 -233.779,260.995 -227.398,189.054 -217.721,185.614 -204.178,175.514 -194.158,170.695 
 	-185.678,164.695 -179.48,162.975 -177.48,159.454 -167.559,159.734 -156.279,153.234 -139.898,157.514 -136.038,155.054 
 	-128.58,155.274 -124.881,153.255 -122.361,154.195 -112.241,153.195 -107.741,154.494 -95.86,152.575 -92.539,154.234 
 	-93.899,157.614 -91.138,156.695 -85.841,160.234 -82.659,156.014 -72.701,164.374 -55.881,165.075 -44.259,171.415 
 	-32.701,213.774 -19.138,239.135 -18.981,254.415 -7.298,268.615 -1.298,273.455 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Tissemsilt", data["Tissemsilt"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x33_8_Tissemsilt"
-          fill={data["Tissemsilt"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M225.421-157.014
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Tissemsilt", data["Tissemsilt"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x33_8_Tissemsilt"
+            fill={data["Tissemsilt"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M225.421-157.014
 	l1.544,1.344l-2.244,2.67l-1.412-0.284l-0.664-1.786l-1.986,1.084l0.412,3.302l-1.302,2.15l2.69,3.34l1.178-4.596l2.538,1.86
 	l1.076-0.606l2.706,1.528l0.122,2.83l3.906-0.348l2.09,3.438l1.626,0.31l0.344-2.094l1.916,1.944l7.594-0.864l4.868-2.674
 	l-1.118,1.342l3.1,0.134l-0.06,1.904l7.4-0.632l1.42-3.936l-5.62-1.476l-0.694-2.72l1.008-1.24l4.452,0.458l1.804-7.814
 	l-3.124-0.262l-1.68-2.218l-2.456-0.11l-0.88-1.874l-5.374,1.418l0.012-2.008l-5.268,5.856l-1.548,0.038l-0.8-2.298l-4.266-0.502
 	l-3.82-2.34l-2.072-3.752l-2.438,2.328l-0.072,1.73l-4.524,1.24l0.768,0.696l-1.036,0.666L225.421-157.014L225.421-157.014z"
-        />
-      </g>
-      <g
-        onClick={() => onWilayaClick?.("El Oued", data["El Oued"]?.value ?? 0)}
-      >
-        
-        <polygon
-          className="state"
-          id="_x33_9_El_Oued"
-          fill={data["El Oued"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="559.22,26.494 
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("El Oued", data["El Oued"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x33_9_El_Oued"
+            fill={data["El Oued"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="559.22,26.494 
 	479.759,35.014 468.759,22.294 453.199,-0.866 436.999,-46.806 434.579,-62.126 433.939,-60.526 432.9,-62.605 431.379,-62.386 
 	425.919,-58.105 424.819,-60.206 426.52,-67.726 424.859,-70.886 423.359,-74.206 420.179,-77.226 419.6,-84.745 419.739,-84.726 
 	430.359,-87.326 441.819,-83.245 444.72,-80.446 448.02,-81.605 448.02,-81.626 451.479,-86.006 451.579,-81.686 461.96,-75.406 
 	465.059,-74.706 465.239,-83.866 474.079,-84.666 482.6,-81.686 499.119,-80.866 499.319,-79.346 496.119,-76.826 492.759,-78.166 
 	490.96,-73.786 487.559,-71.386 489.02,-69.026 487.879,-63.346 489.139,-59.766 488.22,-57.766 491.04,-55.646 491.579,-50.166 
 	498.72,-39.006 502.699,-26.825 505.879,-26.806 515.22,-22.946 515.32,-20.386 524.84,-9.266 527.22,7.054 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Khenchela", data["Khenchela"]?.value ?? 0)
-        }
-      >
-        
-        <polygon
-          className="state"
-          id="_x34_0_Khenchela"
-          fill={data["Khenchela"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Khenchela", data["Khenchela"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x34_0_Khenchela"
+            fill={data["Khenchela"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	474.46,-109.465 474.639,-112.646 473.639,-112.346 474.52,-115.046 475.84,-116.986 478.379,-116.786 480.119,-112.026 
 	478.619,-108.006 479.9,-106.105 479.84,-102.706 475.619,-94.826 474.079,-84.666 465.239,-83.866 465.059,-74.706 461.96,-75.406 
 	451.579,-81.686 451.479,-86.006 450.439,-89.866 452.54,-93.946 452.22,-100.926 453.66,-105.706 452.02,-105.306 
@@ -910,92 +913,89 @@ const Map: React.FC<IMapProps> = ({
 	476.419,-145.426 477.239,-148.226 479.859,-146.385 479.499,-145.226 480.699,-146.426 481.499,-145.805 482.16,-143.406 
 	483.54,-143.286 484.859,-141.186 478.6,-138.926 478.84,-134.046 480.359,-132.885 478.78,-130.525 480.879,-127.406 
 	478.02,-122.526 475.419,-120.906 472.639,-113.686 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Souk Ahras", data["Souk Ahras"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x34_1_Souk_Ahras"
-          fill={data["Souk Ahras"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M514.766-170.062
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Souk Ahras", data["Souk Ahras"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x34_1_Souk_Ahras"
+            fill={data["Souk Ahras"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M514.766-170.062
 	l-4.35-2.162l-4.998,2.222l-2.51-0.312l-4.204,4.704l-3.244,0.062l-3.754-2.802l-0.794,2.728l-1.636,0.97l0.708,3.074l-5.63,0.428
 	l0.062-2.956l-5.346-1.88l-2.052-2.662l-1.3-4.24l-1.472-0.09l-0.846-4.526l-1.5-1.838l0.99-2.692l5.706,1.078l5.038-1.868
 	l2.39,0.544l4.32-4.162l4.436-0.344l0.748-0.874l-2.158-2.764l0.39-2.634l2.046,0.824l3.664-3.088l2.766-0.038l0.544,3.52
 	l1.646-2.514l3.644-1.648l6.39,1.692l1.49-1.062l2.354,1.272l-1.188,3.434l0.762,2.504l-2.102,2.134l0.79,1.622l-1.736,3.144
 	l1.666,3.652l-1.736,3.102L514.766-170.062L514.766-170.062z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Tipaza", data["Tipaza"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x34_2_Tipaza"
-          fill={data["Tipaza"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M238.204-193.226
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Tipaza", data["Tipaza"]?.value ?? 0)}
+        >
+          <path
+            className="state"
+            id="_x34_2_Tipaza"
+            fill={data["Tipaza"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M238.204-193.226
 	l-2.196,4.934l2.84,5.216l2.938-2.196l0.576-2.222l7.786,1.612l5.918-1.938l5.456,1.63l9.354,0.02l2.074-2.928l3.136,0.604
 	l0.896-1.28l-0.886-1.604l2.12-0.28l2.954-3.294l4.222-1.198l-0.678-2.046l-0.27-2.894l-10.376,5.674l-5.454-0.078l-0.962-2.048
 	l-2.352-0.56l-13.48,4.064l-4.622-0.548L238.204-193.226L238.204-193.226z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Mila", data["Mila"]?.value ?? 0)}>
-        
-        <path
-          className="state"
-          id="_x34_3_Mila"
-          fill={data["Mila"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M425.59-162.223
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Mila", data["Mila"]?.value ?? 0)}>
+          <path
+            className="state"
+            id="_x34_3_Mila"
+            fill={data["Mila"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M425.59-162.223
 	l-7.166-0.836l-0.98,0.766l2.4-2.586l-2.324-2.426l1.38-1.206l-0.572-4.17l-3.426-0.798l-0.098-3.736l1.954-1.042l-4.376-4.734
 	l0.194-2.342l-2.788-0.852l0.228-2.694l-2.488-1.906l0.25-4.096l-1.114-1.434l2.226-0.676l2.734,1.444l3.008-0.892l2.484-3.342
 	l9.712,1.624l3.722-2.464l0.866,1.276l5.484,0.962l1.934-0.348l-0.04,3.198l-6.596,1.53l0.57,4.042l-1.842,3.756l2.638-0.81
 	l2.252,1.758l-0.528,2.976l1.576,0.992l2.036-0.59l1.874,1.606l-0.216,2.708l-4.732,1.726l-0.324,5.582l-2.438,3.066l-1.564-0.232
 	l0.426,1.542l-1.43-1.02l-3.3,0.452L425.59-162.223L425.59-162.223z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Aïn Defla", data["Aïn Defla"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x34_4_Aïn_Defla"
-          fill={data["Aïn Defla"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M276.861-181.958
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Aïn Defla", data["Aïn Defla"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x34_4_Aïn_Defla"
+            fill={data["Aïn Defla"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M276.861-181.958
 	l-5.986-4.212l-9.354-0.02l-5.456-1.63l-5.918,1.938l-7.786-1.612l-0.576,2.222l-2.938,2.196l-2.84-5.216l-4.458,3.28l-0.26,2.344
 	l2.992,3.244l-2.392,2.338l3.658,1.072l-2.66,1.77l0.008,2.038l1.36,1.406l1.6-0.358l-0.514,2.198l1.364,3.214l2.536,1.818
 	l-0.508,3.518l4.266,0.502l0.8,2.298l1.548-0.038l5.268-5.856l-0.012,2.008l5.374-1.418l0.88,1.874l2.456,0.11l1.68,2.218
 	l3.124,0.262l2.1-2.208l-0.674-1.752l3.97,0.148l0.634-5.552l1.722,0.468l3.684-2.222l0.126-3.686l-2.688-0.61l-0.17-2.738
 	L271.403-177l1.25-3.82l2.692,0.086L276.861-181.958L276.861-181.958z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Naâma", data["Naâma"]?.value ?? 0)}>
-        
-        <polygon
-          className="state"
-          id="_x34_5_Naâma"
-          fill={data["Naâma"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="170.26,-44.006 
+          />
+        </g>
+        <g onClick={() => onWilayaClick?.("Naâma", data["Naâma"]?.value ?? 0)}>
+          <polygon
+            className="state"
+            id="_x34_5_Naâma"
+            fill={data["Naâma"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="170.26,-44.006 
 	164.42,-17.806 166.102,-12.906 164.322,-10.926 165.66,-10.045 164.481,-6.886 161.361,-5.166 160.8,-1.486 162.462,-0.546 
 	161.92,1.714 163.88,3.914 163.081,6.974 163.942,11.755 157.962,23.274 154.701,28.075 149.88,27.035 146.26,29.695 132.68,25.894 
 	121.02,32.094 120.42,28.975 117.659,28.894 118.741,23.154 115.879,22.915 115.559,18.135 121.3,12.955 109.759,3.654 
@@ -1005,175 +1005,171 @@ const Map: React.FC<IMapProps> = ({
 	140.26,-79.346 143.942,-77.266 150.201,-57.726 150.842,-59.986 152.54,-59.906 156.722,-65.686 160.002,-67.105 162.742,-66.706 
 	163.081,-61.766 166.68,-63.386 168.779,-61.886 168.38,-56.586 169.88,-56.026 171.342,-52.446 172.861,-52.226 168.619,-49.965 
 	"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Aïn Témouchent", data["Aïn Témouchent"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x34_6_Aïn_Témouchent"
-          fill={data["Aïn Témouchent"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.(
+              "Aïn Témouchent",
+              data["Aïn Témouchent"]?.value ?? 0
+            )
+          }
+        >
+          <path
+            className="state"
+            id="_x34_6_Aïn_Témouchent"
+            fill={data["Aïn Témouchent"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="
 	M123.968-119.174l-1.372,0.14l-0.524-1.82l-6.978-3.496l-0.662,0.66l-0.744-1.544l-2.162,0.91l-4.676-1.586l-1.836,2.672
 	l-2.166,0.528l-2.102-1.336l0.404-1.908l-1.694-1.246l5.338-3.532l3.254,0.282l4.236-2.486l4.05-11.214l1.788,0.07l4.12-3.244
 	l2.682,2.858l-0.444,1.434l2.016,0.014l-0.766,2.038l-1.786,0.502l0.348,3.182l0.024-1.242l1.788-0.09l-0.404-1.192l1.642,1.314
 	l3.14,0.042l10.132-3.248l1.552,5.842l-1.544,1.128l-0.054,2.202l-5.676,0.994l-0.136,1.456l-1.936,0.912l-1.626-1.096l-1.562,2.79
 	l-1.346-0.358l0.572,3.892l-2.76,0.922l-0.496,2.902L123.968-119.174L123.968-119.174z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Ghardaïa", data["Ghardaïa"]?.value ?? 0)
-        }
-      >
-        
-        <polygon
-          className="state"
-          id="_x34_7_Ghardaïa_1_"
-          fill={data["Ghardaïa"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Ghardaïa", data["Ghardaïa"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x34_7_Ghardaïa_1_"
+            fill={data["Ghardaïa"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	382.259,-4.906 372.179,13.714 358.66,28.334 357.759,48.114 351.441,48.114 347.101,45.434 342.059,41.434 336.601,41.434 
 	331.441,37.934 317.601,37.934 314.9,35.614 305.941,35.014 302.941,33.934 295.601,33.934 293.101,32.114 283.101,29.274 
 	273.941,25.274 264.941,18.255 264.919,18.234 263.361,11.955 262.221,-0.406 283.879,-2.306 294.621,-5.526 311.721,-1.446 
 	311.059,-7.245 303.741,-11.706 319.441,-12.426 321.322,-13.906 322.202,-13.266 323.04,-14.766 323.639,-13.745 325.462,-14.526 
 	330.822,-12.306 332.361,-13.146 358.52,-11.346 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Relizane", data["Relizane"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x34_8_Relizane"
-          fill={data["Relizane"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M201.76-136.182
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Relizane", data["Relizane"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x34_8_Relizane"
+            fill={data["Relizane"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M201.76-136.182
 	l-4.094-0.636l-0.59-1.324l-3.442,0.17l-1.836-1.834l-3.78,0.082l-2.564-3.604l-1.716,1.222l-0.25-1.048l-3.432,0.986l-2.434-7.222
 	l-1.156-0.388l3.488-4.148l1.734-1.078l1.754,0.746l2.664-2.874l-0.454-1.82l1.18-1.984l-1.348,0.072l-0.626-1.534l1.692-2.036
 	l2.452,1.144l1.106-1.21l4.252-0.186l-0.718-1.742l1.268-1.398l-2.578-2.7l3.958-4.942l4.11,0.642l4.346-1.602l0.934,3.788
 	l1.074,0.042l-1.654,3.374l1.018-0.314l1.038,3.994l3.55-1.326l-0.694,0.488l1.186,0.082l1.082,2.358l3.126,1.97l5.676-1.626
 	l4.344,6.574l1.544,1.344l-2.244,2.67l-1.412-0.284l-0.664-1.786l-1.986,1.084l0.412,3.302l-1.302,2.15l-2.898,1.144l-1.136,1.972
 	l-4.116-0.414l-0.328,1.826l-1.622-0.22l-0.224,1.736l-2.428,0.194l-3.454,5.756L201.76-136.182L201.76-136.182z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("El Meghaier", data["El Meghaier"]?.value ?? 0)
-        }
-      >
-        
-        <polygon
-          className="state"
-          id="_x34_9_El_M_x27_Ghair"
-          fill={data["El Meghaier"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("El Meghaier", data["El Meghaier"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x34_9_El_M_x27_Ghair"
+            fill={data["El Meghaier"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	426.939,-35.406 409.939,-35.086 392.34,-34.766 393.66,-38.206 392.299,-41.386 391.6,-50.646 389.419,-54.826 391.139,-62.826 
 	395.079,-72.206 387.739,-78.726 389.16,-82.426 386.759,-85.146 390.54,-87.786 389.1,-89.046 391.299,-90.306 391.479,-90.186 
 	395.879,-87.266 419.6,-84.745 420.179,-77.226 423.359,-74.206 424.859,-70.886 426.52,-67.726 424.819,-60.206 423.499,-58.986 
 	423.4,-56.186 425.679,-50.986 425.759,-45.886 423.84,-43.745 426.199,-40.806 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("El Menia", data["El Menia"]?.value ?? 0)
-        }
-      >
-        
-        <polygon
-          className="state"
-          id="_x35_0_El_Meniaa"
-          fill={data["El Menia"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("El Menia", data["El Menia"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x35_0_El_Meniaa"
+            fill={data["El Menia"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	357.759,48.114 357.121,62.355 350.78,78.654 329.799,152.075 326.639,154.255 313.121,182.434 296.66,189.695 274.379,191.635 
 	253.842,199.255 256.081,189.475 247.54,141.994 252.822,115.434 254.18,58.195 263.481,47.894 262.039,30.674 267.201,27.315 
 	264.941,18.255 273.941,25.274 283.101,29.274 293.101,32.114 295.601,33.934 302.941,33.934 305.941,35.014 314.9,35.614 
 	317.601,37.934 331.441,37.934 336.601,41.434 342.059,41.434 347.101,45.434 351.441,48.114 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Ouled Djellal", data["Ouled Djellal"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x35_1_Ouled_Djellal"
-          fill={data["Ouled Djellal"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M392.299-41.386
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Ouled Djellal", data["Ouled Djellal"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x35_1_Ouled_Djellal"
+            fill={data["Ouled Djellal"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M392.299-41.386
 	l1.36,3.18l-1.32,3.44l-1.82,3.72l-7.84-7l-0.22-3.8l1.04-1.76l-8-2l-1.46-2.44l-3.92,0.64l-0.78-1.9l-6.52-1.24l-2.16-2.96
 	l-13.14-5.66l-0.9-1.38l0.8-1.04l2.68-0.26l2.74-2.94h2.4l-1.14-1.46l-4.7-0.78l-0.78-2.98l-3.78-0.54l-1.86-2.28l0.88-1.38
 	l3.98-1.04l1.56-2.02l-3.64-1.86l0.62-1.44l-2.44-2.54l-0.82-6.18l-1.06-0.6l4.38-3.66l1.76-3.66l9.62-0.08l3.66-2.28l1.32,0.88
 	l2.04-1.08l-2.6-2.18l2-0.34l1.88-3l8.78-2.64c0,0,0,0,0.02,0c3.58,0.18,7.46,0.32,7.46,0.32l1.5,3.94l1.88,1.62l0.3,2.08l2.5,1.86
 	l1.76,1.94v3l1.16,2.98l-0.18-0.12l-2.2,1.26l1.44,1.26l-3.78,2.64l2.4,2.72l-1.42,3.7l7.34,6.52l-3.94,9.38l-1.72,8l2.18,4.18
 	L392.299-41.386z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.(
-            "Bordj Badji Mokhtar",
-            data["Bordj Badji Mokhtar"]?.value ?? 0
-          )
-        }
-      >
-        <title>
-          Bordj Badji Mokhtar: {data["Bordj Badji Mokhtar"]?.value ?? 0}
-        </title>
-        <polygon
-          className="state"
-          id="_x35_2_Bordj_Baji_Mokhtar"
-          fill={data["Bordj Badji Mokhtar"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.(
+              "Bordj Badji Mokhtar",
+              data["Bordj Badji Mokhtar"]?.value ?? 0
+            )
+          }
+        >
+          <title>
+            Bordj Badji Mokhtar: {data["Bordj Badji Mokhtar"]?.value ?? 0}
+          </title>
+          <polygon
+            className="state"
+            id="_x35_2_Bordj_Baji_Mokhtar"
+            fill={data["Bordj Badji Mokhtar"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	277.54,649.555 273.059,651.015 269.679,644.854 264.759,640.255 261.639,639.534 257.879,643.455 255.322,641.154 253.722,641.935 
 	251.242,640.995 249.201,642.115 247.222,639.055 243.68,639.135 237.279,633.294 235.481,624.635 222.779,620.154 219.619,616.115 
 	213.38,616.654 212.462,614.294 214.102,602.775 212.962,596.854 157.481,559.654 156.701,555.695 -26.138,420.534 -67.918,388.034 
 	-67.94,388.034 -68.019,387.974 -41.679,378.515 -28.201,377.695 226.38,448.835 225.119,561.794 233.442,560.455 242.279,561.395 
 	242.52,562.515 245.322,575.895 257.52,588.275 262.501,598.395 265.861,610.094 265.799,622.354 270.299,628.875 276.559,643.775 
 	"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Béni Abbès", data["Béni Abbès"]?.value ?? 0)
-        }
-      >
-        
-        <polygon
-          className="state"
-          id="_x35_3_Béni_Abbès"
-          fill={data["Béni Abbès"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Béni Abbès", data["Béni Abbès"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x35_3_Béni_Abbès"
+            fill={data["Béni Abbès"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	180.002,107.355 163.14,126.294 155.201,140.114 134.822,154.454 131.76,164.954 133.8,178.554 132.581,183.994 123.64,191.554 
 	120.942,193.855 98.559,194.774 72.081,202.014 58.42,220.614 45.341,230.475 41.879,237.994 29.581,253.054 22.861,274.315 
 	25.18,276.815 -1.298,273.455 -7.298,268.615 -18.981,254.415 -19.138,239.135 -32.701,213.774 -44.259,171.415 -55.881,165.075 
@@ -1183,57 +1179,56 @@ const Map: React.FC<IMapProps> = ({
 	35.442,111.774 45.442,102.394 64.822,102.654 66.822,100.394 88.442,100.394 91.201,98.514 97.059,97.774 99.822,101.035 
 	108.442,100.154 109.822,98.654 116.559,98.394 119.559,96.274 130.559,95.894 132.442,94.274 137.559,94.274 143.442,99.774 
 	147.559,99.774 150.559,104.035 167.559,104.035 170.942,105.894 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Timimoun", data["Timimoun"]?.value ?? 0)
-        }
-      >
-        
-        <polygon
-          className="state"
-          id="_x35_4_Timimoun"
-          fill={data["Timimoun"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Timimoun", data["Timimoun"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x35_4_Timimoun"
+            fill={data["Timimoun"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
 	256.081,189.475 253.842,199.255 252.279,220.434 251.102,224.174 248.779,218.874 242.8,215.614 229.442,216.934 224.442,214.934 
 	210.442,215.274 201.779,218.874 196.442,220.934 193.102,222.274 187.442,223.614 180.38,223.614 173.779,221.614 168.779,218.874 
 	162.102,218.874 155.442,216.274 147.442,213.934 123.64,191.554 132.581,183.994 133.8,178.554 131.76,164.954 134.822,154.454 
 	155.201,140.114 163.14,126.294 180.002,107.355 180.38,106.915 212.02,84.554 254.18,58.195 252.822,115.434 247.54,141.994 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("Touggourt", data["Touggourt"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x35_5_Touggourt"
-          fill={data["Touggourt"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M479.759,35.014
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Touggourt", data["Touggourt"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x35_5_Touggourt"
+            fill={data["Touggourt"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M479.759,35.014
 	l-6.78-0.8l-3.3-1.62l-5.06-2.26l-5.52-2.22l-14.5-5.18l-4.08-0.42l-12.84-17.08l-0.4-11.82l-5.5-1.76l-1.58-1.74l-1.92-4.08
 	c0,0-5.08-4.34-5.68-4.18c-0.58,0.18,0-11.08,0-11.08l-2.66-3.62v-2.24l17-0.32l-0.74-5.4l-2.36-2.94l1.92-2.14l-0.08-5.1l-2.28-5.2
 	l0.1-2.8l1.32-1.22l1.1,2.1l5.46-4.28l1.52-0.22l1.04,2.08l0.64-1.6l2.42,15.32l16.2,45.94l15.56,23.16L479.759,35.014z"
-        />
-      </g>
-      <g onClick={() => onWilayaClick?.("Djanet", data["Djanet"]?.value ?? 0)}>
-        
-        <polygon
-          className="state"
-          id="_x35_6_Djanet"
-          fill={data["Djanet"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          points="723.26,452.534 
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Djanet", data["Djanet"]?.value ?? 0)}
+        >
+          <polygon
+            className="state"
+            id="_x35_6_Djanet"
+            fill={data["Djanet"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="723.26,452.534 
 	644.7,510.755 643.26,469.635 628.299,461.174 623.88,461.275 620.56,459.234 592.76,460.875 566.979,480.115 532.62,488.435 
 	520.14,479.654 524.08,475.174 512.919,450.455 510.84,428.575 511.319,421.015 500.139,404.955 491.179,404.674 485.52,400.315 
 	478.139,387.835 474.879,379.495 464.759,367.215 469.679,370.515 476.679,372.775 483.939,374.775 497.439,381.775 515.2,381.775 
@@ -1241,22 +1236,21 @@ const Map: React.FC<IMapProps> = ({
 	563.44,355.515 569.979,363.775 573.44,372.275 579.44,379.034 588.94,379.515 595.94,377.775 603.44,378.034 608.68,375.775 
 	625.66,376.734 626.419,386.654 635.94,402.055 642.88,407.395 651.7,406.914 654.78,404.654 659.04,404.375 662.1,407.354 
 	664.68,404.115 668.1,404.594 670.68,405.635 675.76,410.695 679.78,412.015 693.94,420.755 702.16,416.794 "
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("In Salah", data["In Salah"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x35_7_In_Salah"
-          fill={data["In Salah"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M423.819,270.155
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("In Salah", data["In Salah"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x35_7_In_Salah"
+            fill={data["In Salah"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M423.819,270.155
 	l-13.88-0.38l-2.5,4l-4.24,4.88v4.24l2.24,5.62l-6.24,8.76l-3.14,2.5v4.88l-9.86,10l-4.14,1l-2.38,4.38c0,0-1.86,0.36-2.62,0
 	c-0.74-0.38-3.12-2.38-3.12-2.38l-13,0.74l-16,17.26l-5.12,0.74l-5.5-5.24l-2.26,1.74l3.38,5.38l2,2l1.5,8.38l-3.12,2.62l-0.38,4.5
 	l6.12,10.38l-11.5,11.24l-3.38-1.5l-2.12,1.5h-6.24l-1.26-2.62v-8.74l-5.24,0.12l-6.38,7.5l-20.5,0.74l-5.62-5.88l-8.12-1.24
@@ -1264,34 +1258,31 @@ const Map: React.FC<IMapProps> = ({
 	l-5.42-12.08l14.96-15.36l2.38-4.9l5.26-1.62l1.78,1.62l3.48-0.4l0.28,1.64l4.7-3.36l0.94-17.76l5.12-12.88l-3.7-5.56l-0.1-12.42
 	l3.72-6.36l1.62-20.16l6.34-10.06l0.94-3.04l0.08-0.24l1.18-3.74l1.56-21.18l20.54-7.62l22.28-1.94l35.06,28.36l-0.3,0.82
 	l86.24-66.52l2.6,67.62l-3.54,16.72L423.819,270.155z"
-        />
-      </g>
-      <g
-        onClick={() =>
-          onWilayaClick?.("In Guezzam", data["In Guezzam"]?.value ?? 0)
-        }
-      >
-        
-        <path
-          className="state"
-          id="_x35_8_In_Guezzam"
-          fill={data["In Guezzam"]?.color ?? color}
-          stroke={stroke}
-          strokeWidth="0.75"
-          strokeLinecap="round"
-          d="M529.58,594.575
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("In Guezzam", data["In Guezzam"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x35_8_In_Guezzam"
+            fill={data["In Guezzam"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M529.58,594.575
 	l-13.54,9.86l-76.12,75.46l-121.02,27.54l-10.22-7.82l-1.02-2.32l4.18-5.72l0.74-3.42l2.94-3.12l-1.84-4.3l0.72-1.96l-1.94-3.12
 	l1.08-3.48l-1.08-1.82l0.82-7.42l-13.08-6.32l-12.62-2.66l-6.16,0.04l-5.4-2.86l-2.96-0.12l4.48-1.46l-0.98-5.78l-6.26-14.9
 	l-4.5-6.52l0.06-12.26l-3.36-11.7l-4.98-10.12l-12.2-12.38l-2.8-13.38l19.98-0.3l1.7-1.94l31.48,0.24l2.76-4.48l4,1.24l3,7.24
 	l3.5,6.76l2.74,9l6,0.5l5.26,7.26l9.5,0.48l3.5,3.26l7.5,2.26l4,5v4.48l2.5,3v5.52l-1.26,3l-1.24,9.74l2.76,3h8.74l10.26-10.26
 	l8.74-1.74l2.26-9.26l1.48-4l-1.48-4.48l1.74-7.26l4.26-2.5l4.24,1.5l8.24,0.5l10.52,6.76l19.24-0.26l5.24,5.74h25v-8.74l3-6l3-7.26
 	l2.26-7.48l2.5-5h12.24l18.26,13.24l4.5,0.76l2.24-2h5.26c0,0,10.5,8.48,11.74,10C524.24,590.695,526.84,592.615,529.58,594.575z"
-        />
-      </g>
-    </svg>
-  
-      </span>
+          />
+        </g>
+      </svg>
+    </div>
   );
-   
 };
 export default Map;
