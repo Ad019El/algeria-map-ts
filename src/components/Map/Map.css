@@ -11,7 +11,7 @@
   stroke-width: 4px;
   cursor: pointer;
 }
-#tooltip{
+.algeria-map-tooltip{
   position: absolute;
   background-color: #fff;
   padding:4px;
