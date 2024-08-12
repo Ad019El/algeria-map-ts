@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useId } from "react";
 import "./Map.css";
 import { IMapProps } from "./types";
 import { debounce, wilayas } from "../../utils";
@@ -15,13 +15,14 @@ const Map: React.FC<IMapProps> = ({
   getHoverContent,
   hoverContentStyle
 }) => {
+
   const tooltipRef = React.createRef<HTMLDivElement>();
+  const svgId = useId();
   useEffect(() => {
-    if(!tooltipRef.current)
-    return;
-    else
+
+
     {
-  const elements=document.getElementById('svg2')?.getElementsByTagName('g') || [];
+  const elements=document.getElementById(svgId)?.getElementsByTagName('g') || [];
 
       for(let i=0; i<elements.length; i++){
       elements[i].addEventListener('mousemove',function(ev){
@@ -58,7 +59,7 @@ const Map: React.FC<IMapProps> = ({
      };
     }
    
-  },[])
+  },[svgId,tooltipRef.current])
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--react-algeria-map-hover-fill",
@@ -74,9 +75,9 @@ const Map: React.FC<IMapProps> = ({
     <span
     id="algeria_map"
     >
-      <div style={hoverContentStyle} id="tooltip" ref={tooltipRef}></div>
+      <div style={hoverContentStyle} className="algeria-map-tooltip"  ref={tooltipRef}></div>
       <svg
-      id="svg2"
+      id={svgId}
       x="0px"
       y="0px"
       width={width ?? "100%"}
