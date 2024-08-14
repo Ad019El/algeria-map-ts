@@ -1,7 +1,7 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import Map from "./Map";
-import { mockData } from "../../utils";
+import Map from ".";
+import { mapWilayas } from "../../utils";
 
 
 
@@ -32,7 +32,7 @@ const assignColor = (value: number) => {
 };
 
 // add color range for each wilaya and add the color to the map
-const multipleColor = Object.entries(mockData).reduce<{ [key: string]: any }>(
+const multipleColor = Object.entries(mapWilayas).reduce<{ [key: string]: any }>(
   (acc, [wilaya, value]) => {
     acc[wilaya] = { ...value, color: assignColor(value.value) };
     return acc;
@@ -43,7 +43,7 @@ const multipleColor = Object.entries(mockData).reduce<{ [key: string]: any }>(
 export const OneColor: Story = {
   render: () => (
     <Map
-      data={mockData}
+      data={mapWilayas}
       color="#2ab7ca"
       HoverColor="#f4f4f8"
       stroke="#000000"
@@ -60,7 +60,7 @@ export const MultipleColors: Story = {
       color="#fff9eb"
       stroke="#000000"
       hoverStroke="#000000"
-      getHoverContent={(record) => `<div style="display: flex; flex-direction: column;color : #FF5100">
+      getHoverContent={(record : any) => `<div style="display: flex; flex-direction: column;color : #FF5100">
        Hello ${record.value}
         <div>`}
     />
