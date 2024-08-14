@@ -59,7 +59,7 @@ const Map: React.FC<IMapProps> = ({
 
     return () => {
       for (let i = 0; i < elements.length; i++) {
-        elements[i].removeEventListener("mousemove", handleMouseEnter(i));
+        elements[i].removeEventListener("mouseenter", handleMouseEnter(i));
         elements[i].removeEventListener("mouseout", handleMouseOut);
       }
     };
@@ -1300,14 +1300,7 @@ const Map: React.FC<IMapProps> = ({
 	317.601,37.934 331.441,37.934 336.601,41.434 342.059,41.434 347.101,45.434 351.441,48.114 "
           />
         </g>
-     
-        
-       
-       
-       
-      
-      
-       
+    
       </svg>
     </div>
   );
