@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useRef } from "react";
 import "./Map.css";
 import { IMapProps } from "./types";
-import { debounce, wilayas } from "../../utils";
+import { mapWilayasIndexes, wilayas } from "../../utils";
 
 const Map: React.FC<IMapProps> = ({
   height,
@@ -14,46 +14,52 @@ const Map: React.FC<IMapProps> = ({
   onWilayaClick,
   getHoverContent,
   hoverContentStyle,
+  getHoverContentStyle
 }) => {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const svgId = useId();
+  const [currentRecord,setCurrentRecord] = React.useState<any>(null)
 
   useEffect(() => {
     const elements =
       document.getElementById(svgId)?.getElementsByTagName("g") || [];
 
-    const handleMouseMove = (i: number) => (ev: MouseEvent) => {
-      debounce(() => {
+    const handleMouseEnter = (i: number) => (ev: MouseEvent) => {
+      if(!data[wilayas[i]]) return
+      if(currentRecord?.wilaya !== wilayas[i])
+      setCurrentRecord(data[wilayas[i]] || null)
+   
         if (tooltipRef.current) {
-          tooltipRef.current.innerHTML =
-            getHoverContent?.(data[wilayas[i]]) || "";
+          tooltipRef.current.innerHTML= data[wilayas[i]] ? getHoverContent?.(data[wilayas[i]]) || "" : "";
           tooltipRef.current.style.left = ev.pageX + "px";
           tooltipRef.current.style.top = ev.pageY + 20 + "px";
           tooltipRef.current.style.display = "block";
+
+    
         } else {
           console.warn("Invalid tooltip ref");
         }
-      }, 100)();
+   
     };
 
     const handleMouseOut = () => {
-      debounce(() => {
+     
         if (tooltipRef.current) {
           tooltipRef.current.style.display = "none";
         } else {
           console.warn("Invalid tooltip ref");
         }
-      }, 100)();
+    ;
     };
 
     for (let i = 0; i < elements.length; i++) {
-      elements[i].addEventListener("mousemove", handleMouseMove(i));
+      elements[i].addEventListener("mouseenter", handleMouseEnter(i));
       elements[i].addEventListener("mouseout", handleMouseOut);
     }
 
     return () => {
       for (let i = 0; i < elements.length; i++) {
-        elements[i].removeEventListener("mousemove", handleMouseMove(i));
+        elements[i].removeEventListener("mouseenter", handleMouseEnter(i));
         elements[i].removeEventListener("mouseout", handleMouseOut);
       }
     };
@@ -73,10 +79,11 @@ const Map: React.FC<IMapProps> = ({
   return (
     <div>
       <div
-        style={hoverContentStyle}
+        style={hoverContentStyle || getHoverContentStyle?.(currentRecord) || {}}
         className="algeria-map-tooltip"
         ref={tooltipRef}
-      ></div>
+      >
+      </div>
       <svg
         id={svgId}
         x="0px"
@@ -86,6 +93,7 @@ const Map: React.FC<IMapProps> = ({
         viewBox="-248.385 -239.386 982.451 955.452"
         enableBackground="new -248.385 -239.386 982.451 955.452"
       >
+        {/* Adrar */}
         <g onClick={() => onWilayaClick?.("Adrar", data["Adrar"]?.value ?? 0)}>
           <polygon
             className="state"
@@ -105,6 +113,8 @@ const Map: React.FC<IMapProps> = ({
 			 229.442,216.934 242.8,215.614 248.779,218.874 "
           />
         </g>
+
+        {/* Chlef */}
         <g onClick={() => onWilayaClick?.("Chlef", data["Chlef"]?.value ?? 0)}>
           <path
             className="state"
@@ -121,6 +131,8 @@ const Map: React.FC<IMapProps> = ({
 		l0.072-1.73l2.438-2.328l2.072,3.752L238.734-160.41L238.734-160.41z"
           />
         </g>
+
+        {/* Laghouat */}
         <g
           onClick={() =>
             onWilayaClick?.("Laghouat", data["Laghouat"]?.value ?? 0)
@@ -145,6 +157,8 @@ const Map: React.FC<IMapProps> = ({
 	322.059,-42.826 324.879,-38.166 341.139,-32.046 344.121,-29.926 352.139,-22.086 "
           />
         </g>
+
+        {/* Oum El Bouaghi */}
         <g
           onClick={() =>
             onWilayaClick?.(
@@ -171,6 +185,8 @@ const Map: React.FC<IMapProps> = ({
 	l-0.708-3.074L490.908-165.62L490.908-165.62z"
           />
         </g>
+
+        {/* Batna */}
         <g onClick={() => onWilayaClick?.("Batna", data["Batna"]?.value ?? 0)}>
           <path
             className="state"
@@ -193,6 +209,7 @@ const Map: React.FC<IMapProps> = ({
 	L445.635-105.596L445.635-105.596z"
           />
         </g>
+        {/* Bejaïa */}
         <g
           onClick={() => onWilayaClick?.("Béjaïa", data["Béjaïa"]?.value ?? 0)}
         >
@@ -211,6 +228,7 @@ const Map: React.FC<IMapProps> = ({
 	l1.07-1.388l-4.318-2.93l-0.076,0.896l-1.858-0.176l-0.892,2.756l-7.242-0.96l-0.096,2.698L364.848-188.482L364.848-188.482z"
           />
         </g>
+        {/* Biskra */}
         <g
           onClick={() => onWilayaClick?.("Biskra", data["Biskra"]?.value ?? 0)}
         >
@@ -230,6 +248,7 @@ const Map: React.FC<IMapProps> = ({
 	l-0.8,0.96l2.1,2.1l-0.84,2l1.64-0.4l-1.44,4.78L452.54-93.946z"
           />
         </g>
+        {/* Bechar */}
         <g
           onClick={() => onWilayaClick?.("Béchar", data["Béchar"]?.value ?? 0)}
         >
@@ -1073,61 +1092,21 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("El Meghaier", data["El Meghaier"]?.value ?? 0)
+            onWilayaClick?.("Timimoun", data["Timimoun"]?.value ?? 0)
           }
         >
           <polygon
             className="state"
-            id="_x34_9_El_M_x27_Ghair"
-            fill={data["El Meghaier"]?.color ?? color}
+            id="_x35_4_Timimoun"
+            fill={data["Timimoun"]?.color ?? color}
             stroke={stroke}
             strokeWidth="0.75"
             strokeLinecap="round"
             points="
-	426.939,-35.406 409.939,-35.086 392.34,-34.766 393.66,-38.206 392.299,-41.386 391.6,-50.646 389.419,-54.826 391.139,-62.826 
-	395.079,-72.206 387.739,-78.726 389.16,-82.426 386.759,-85.146 390.54,-87.786 389.1,-89.046 391.299,-90.306 391.479,-90.186 
-	395.879,-87.266 419.6,-84.745 420.179,-77.226 423.359,-74.206 424.859,-70.886 426.52,-67.726 424.819,-60.206 423.499,-58.986 
-	423.4,-56.186 425.679,-50.986 425.759,-45.886 423.84,-43.745 426.199,-40.806 "
-          />
-        </g>
-        <g
-          onClick={() =>
-            onWilayaClick?.("El Menia", data["El Menia"]?.value ?? 0)
-          }
-        >
-          <polygon
-            className="state"
-            id="_x35_0_El_Meniaa"
-            fill={data["El Menia"]?.color ?? color}
-            stroke={stroke}
-            strokeWidth="0.75"
-            strokeLinecap="round"
-            points="
-	357.759,48.114 357.121,62.355 350.78,78.654 329.799,152.075 326.639,154.255 313.121,182.434 296.66,189.695 274.379,191.635 
-	253.842,199.255 256.081,189.475 247.54,141.994 252.822,115.434 254.18,58.195 263.481,47.894 262.039,30.674 267.201,27.315 
-	264.941,18.255 273.941,25.274 283.101,29.274 293.101,32.114 295.601,33.934 302.941,33.934 305.941,35.014 314.9,35.614 
-	317.601,37.934 331.441,37.934 336.601,41.434 342.059,41.434 347.101,45.434 351.441,48.114 "
-          />
-        </g>
-        <g
-          onClick={() =>
-            onWilayaClick?.("Ouled Djellal", data["Ouled Djellal"]?.value ?? 0)
-          }
-        >
-          <path
-            className="state"
-            id="_x35_1_Ouled_Djellal"
-            fill={data["Ouled Djellal"]?.color ?? color}
-            stroke={stroke}
-            strokeWidth="0.75"
-            strokeLinecap="round"
-            d="M392.299-41.386
-	l1.36,3.18l-1.32,3.44l-1.82,3.72l-7.84-7l-0.22-3.8l1.04-1.76l-8-2l-1.46-2.44l-3.92,0.64l-0.78-1.9l-6.52-1.24l-2.16-2.96
-	l-13.14-5.66l-0.9-1.38l0.8-1.04l2.68-0.26l2.74-2.94h2.4l-1.14-1.46l-4.7-0.78l-0.78-2.98l-3.78-0.54l-1.86-2.28l0.88-1.38
-	l3.98-1.04l1.56-2.02l-3.64-1.86l0.62-1.44l-2.44-2.54l-0.82-6.18l-1.06-0.6l4.38-3.66l1.76-3.66l9.62-0.08l3.66-2.28l1.32,0.88
-	l2.04-1.08l-2.6-2.18l2-0.34l1.88-3l8.78-2.64c0,0,0,0,0.02,0c3.58,0.18,7.46,0.32,7.46,0.32l1.5,3.94l1.88,1.62l0.3,2.08l2.5,1.86
-	l1.76,1.94v3l1.16,2.98l-0.18-0.12l-2.2,1.26l1.44,1.26l-3.78,2.64l2.4,2.72l-1.42,3.7l7.34,6.52l-3.94,9.38l-1.72,8l2.18,4.18
-	L392.299-41.386z"
+	256.081,189.475 253.842,199.255 252.279,220.434 251.102,224.174 248.779,218.874 242.8,215.614 229.442,216.934 224.442,214.934 
+	210.442,215.274 201.779,218.874 196.442,220.934 193.102,222.274 187.442,223.614 180.38,223.614 173.779,221.614 168.779,218.874 
+	162.102,218.874 155.442,216.274 147.442,213.934 123.64,191.554 132.581,183.994 133.8,178.554 131.76,164.954 134.822,154.454 
+	155.201,140.114 163.14,126.294 180.002,107.355 180.38,106.915 212.02,84.554 254.18,58.195 252.822,115.434 247.54,141.994 "
           />
         </g>
         <g
@@ -1159,6 +1138,27 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
+            onWilayaClick?.("Ouled Djellal", data["Ouled Djellal"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x35_1_Ouled_Djellal"
+            fill={data["Ouled Djellal"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M392.299-41.386
+	l1.36,3.18l-1.32,3.44l-1.82,3.72l-7.84-7l-0.22-3.8l1.04-1.76l-8-2l-1.46-2.44l-3.92,0.64l-0.78-1.9l-6.52-1.24l-2.16-2.96
+	l-13.14-5.66l-0.9-1.38l0.8-1.04l2.68-0.26l2.74-2.94h2.4l-1.14-1.46l-4.7-0.78l-0.78-2.98l-3.78-0.54l-1.86-2.28l0.88-1.38
+	l3.98-1.04l1.56-2.02l-3.64-1.86l0.62-1.44l-2.44-2.54l-0.82-6.18l-1.06-0.6l4.38-3.66l1.76-3.66l9.62-0.08l3.66-2.28l1.32,0.88
+	l2.04-1.08l-2.6-2.18l2-0.34l1.88-3l8.78-2.64c0,0,0,0,0.02,0c3.58,0.18,7.46,0.32,7.46,0.32l1.5,3.94l1.88,1.62l0.3,2.08l2.5,1.86
+	l1.76,1.94v3l1.16,2.98l-0.18-0.12l-2.2,1.26l1.44,1.26l-3.78,2.64l2.4,2.72l-1.42,3.7l7.34,6.52l-3.94,9.38l-1.72,8l2.18,4.18
+	L392.299-41.386z"
+          />
+        </g>
+        <g
+          onClick={() =>
             onWilayaClick?.("Béni Abbès", data["Béni Abbès"]?.value ?? 0)
           }
         >
@@ -1179,63 +1179,6 @@ const Map: React.FC<IMapProps> = ({
 	35.442,111.774 45.442,102.394 64.822,102.654 66.822,100.394 88.442,100.394 91.201,98.514 97.059,97.774 99.822,101.035 
 	108.442,100.154 109.822,98.654 116.559,98.394 119.559,96.274 130.559,95.894 132.442,94.274 137.559,94.274 143.442,99.774 
 	147.559,99.774 150.559,104.035 167.559,104.035 170.942,105.894 "
-          />
-        </g>
-        <g
-          onClick={() =>
-            onWilayaClick?.("Timimoun", data["Timimoun"]?.value ?? 0)
-          }
-        >
-          <polygon
-            className="state"
-            id="_x35_4_Timimoun"
-            fill={data["Timimoun"]?.color ?? color}
-            stroke={stroke}
-            strokeWidth="0.75"
-            strokeLinecap="round"
-            points="
-	256.081,189.475 253.842,199.255 252.279,220.434 251.102,224.174 248.779,218.874 242.8,215.614 229.442,216.934 224.442,214.934 
-	210.442,215.274 201.779,218.874 196.442,220.934 193.102,222.274 187.442,223.614 180.38,223.614 173.779,221.614 168.779,218.874 
-	162.102,218.874 155.442,216.274 147.442,213.934 123.64,191.554 132.581,183.994 133.8,178.554 131.76,164.954 134.822,154.454 
-	155.201,140.114 163.14,126.294 180.002,107.355 180.38,106.915 212.02,84.554 254.18,58.195 252.822,115.434 247.54,141.994 "
-          />
-        </g>
-        <g
-          onClick={() =>
-            onWilayaClick?.("Touggourt", data["Touggourt"]?.value ?? 0)
-          }
-        >
-          <path
-            className="state"
-            id="_x35_5_Touggourt"
-            fill={data["Touggourt"]?.color ?? color}
-            stroke={stroke}
-            strokeWidth="0.75"
-            strokeLinecap="round"
-            d="M479.759,35.014
-	l-6.78-0.8l-3.3-1.62l-5.06-2.26l-5.52-2.22l-14.5-5.18l-4.08-0.42l-12.84-17.08l-0.4-11.82l-5.5-1.76l-1.58-1.74l-1.92-4.08
-	c0,0-5.08-4.34-5.68-4.18c-0.58,0.18,0-11.08,0-11.08l-2.66-3.62v-2.24l17-0.32l-0.74-5.4l-2.36-2.94l1.92-2.14l-0.08-5.1l-2.28-5.2
-	l0.1-2.8l1.32-1.22l1.1,2.1l5.46-4.28l1.52-0.22l1.04,2.08l0.64-1.6l2.42,15.32l16.2,45.94l15.56,23.16L479.759,35.014z"
-          />
-        </g>
-        <g
-          onClick={() => onWilayaClick?.("Djanet", data["Djanet"]?.value ?? 0)}
-        >
-          <polygon
-            className="state"
-            id="_x35_6_Djanet"
-            fill={data["Djanet"]?.color ?? color}
-            stroke={stroke}
-            strokeWidth="0.75"
-            strokeLinecap="round"
-            points="723.26,452.534 
-	644.7,510.755 643.26,469.635 628.299,461.174 623.88,461.275 620.56,459.234 592.76,460.875 566.979,480.115 532.62,488.435 
-	520.14,479.654 524.08,475.174 512.919,450.455 510.84,428.575 511.319,421.015 500.139,404.955 491.179,404.674 485.52,400.315 
-	478.139,387.835 474.879,379.495 464.759,367.215 469.679,370.515 476.679,372.775 483.939,374.775 497.439,381.775 515.2,381.775 
-	516.94,380.515 529.44,380.275 531.68,371.275 537.94,367.515 541.68,366.034 545.2,366.034 547.44,361.775 556.2,355.515 
-	563.44,355.515 569.979,363.775 573.44,372.275 579.44,379.034 588.94,379.515 595.94,377.775 603.44,378.034 608.68,375.775 
-	625.66,376.734 626.419,386.654 635.94,402.055 642.88,407.395 651.7,406.914 654.78,404.654 659.04,404.375 662.1,407.354 
-	664.68,404.115 668.1,404.594 670.68,405.635 675.76,410.695 679.78,412.015 693.94,420.755 702.16,416.794 "
           />
         </g>
         <g
@@ -1281,6 +1224,83 @@ const Map: React.FC<IMapProps> = ({
 	l2.26-7.48l2.5-5h12.24l18.26,13.24l4.5,0.76l2.24-2h5.26c0,0,10.5,8.48,11.74,10C524.24,590.695,526.84,592.615,529.58,594.575z"
           />
         </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("Touggourt", data["Touggourt"]?.value ?? 0)
+          }
+        >
+          <path
+            className="state"
+            id="_x35_5_Touggourt"
+            fill={data["Touggourt"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            d="M479.759,35.014
+	l-6.78-0.8l-3.3-1.62l-5.06-2.26l-5.52-2.22l-14.5-5.18l-4.08-0.42l-12.84-17.08l-0.4-11.82l-5.5-1.76l-1.58-1.74l-1.92-4.08
+	c0,0-5.08-4.34-5.68-4.18c-0.58,0.18,0-11.08,0-11.08l-2.66-3.62v-2.24l17-0.32l-0.74-5.4l-2.36-2.94l1.92-2.14l-0.08-5.1l-2.28-5.2
+	l0.1-2.8l1.32-1.22l1.1,2.1l5.46-4.28l1.52-0.22l1.04,2.08l0.64-1.6l2.42,15.32l16.2,45.94l15.56,23.16L479.759,35.014z"
+          />
+        </g>
+        <g
+          onClick={() => onWilayaClick?.("Djanet", data["Djanet"]?.value ?? 0)}
+        >
+          <polygon
+            className="state"
+            id="_x35_6_Djanet"
+            fill={data["Djanet"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="723.26,452.534 
+	644.7,510.755 643.26,469.635 628.299,461.174 623.88,461.275 620.56,459.234 592.76,460.875 566.979,480.115 532.62,488.435 
+	520.14,479.654 524.08,475.174 512.919,450.455 510.84,428.575 511.319,421.015 500.139,404.955 491.179,404.674 485.52,400.315 
+	478.139,387.835 474.879,379.495 464.759,367.215 469.679,370.515 476.679,372.775 483.939,374.775 497.439,381.775 515.2,381.775 
+	516.94,380.515 529.44,380.275 531.68,371.275 537.94,367.515 541.68,366.034 545.2,366.034 547.44,361.775 556.2,355.515 
+	563.44,355.515 569.979,363.775 573.44,372.275 579.44,379.034 588.94,379.515 595.94,377.775 603.44,378.034 608.68,375.775 
+	625.66,376.734 626.419,386.654 635.94,402.055 642.88,407.395 651.7,406.914 654.78,404.654 659.04,404.375 662.1,407.354 
+	664.68,404.115 668.1,404.594 670.68,405.635 675.76,410.695 679.78,412.015 693.94,420.755 702.16,416.794 "
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("El Meghaier", data["El Meghaier"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x34_9_El_M_x27_Ghair"
+            fill={data["El Meghaier"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
+	426.939,-35.406 409.939,-35.086 392.34,-34.766 393.66,-38.206 392.299,-41.386 391.6,-50.646 389.419,-54.826 391.139,-62.826 
+	395.079,-72.206 387.739,-78.726 389.16,-82.426 386.759,-85.146 390.54,-87.786 389.1,-89.046 391.299,-90.306 391.479,-90.186 
+	395.879,-87.266 419.6,-84.745 420.179,-77.226 423.359,-74.206 424.859,-70.886 426.52,-67.726 424.819,-60.206 423.499,-58.986 
+	423.4,-56.186 425.679,-50.986 425.759,-45.886 423.84,-43.745 426.199,-40.806 "
+          />
+        </g>
+        <g
+          onClick={() =>
+            onWilayaClick?.("El Menia", data["El Menia"]?.value ?? 0)
+          }
+        >
+          <polygon
+            className="state"
+            id="_x35_0_El_Meniaa"
+            fill={data["El Menia"]?.color ?? color}
+            stroke={stroke}
+            strokeWidth="0.75"
+            strokeLinecap="round"
+            points="
+	357.759,48.114 357.121,62.355 350.78,78.654 329.799,152.075 326.639,154.255 313.121,182.434 296.66,189.695 274.379,191.635 
+	253.842,199.255 256.081,189.475 247.54,141.994 252.822,115.434 254.18,58.195 263.481,47.894 262.039,30.674 267.201,27.315 
+	264.941,18.255 273.941,25.274 283.101,29.274 293.101,32.114 295.601,33.934 302.941,33.934 305.941,35.014 314.9,35.614 
+	317.601,37.934 331.441,37.934 336.601,41.434 342.059,41.434 347.101,45.434 351.441,48.114 "
+          />
+        </g>
+    
       </svg>
     </div>
   );
