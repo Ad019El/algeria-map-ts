@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useRef } from "react";
 import "./Map.css";
 import { IMapProps } from "./types";
-import { mapWilayasIndexes, wilayas } from "../../utils";
+import { wilayas } from "../../utils";
 
 const Map: React.FC<IMapProps> = ({
   height,
@@ -94,7 +94,7 @@ const Map: React.FC<IMapProps> = ({
         enableBackground="new -248.385 -239.386 982.451 955.452"
       >
         {/* Adrar */}
-        <g onClick={() => onWilayaClick?.("Adrar", data["Adrar"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Adrar", data["Adrar"])}>
           <polygon
             className="state"
             id="_x30_1_Adrar"
@@ -115,7 +115,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
 
         {/* Chlef */}
-        <g onClick={() => onWilayaClick?.("Chlef", data["Chlef"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Chlef", data["Chlef"])}>
           <path
             className="state"
             id="_x30_2_Chlef"
@@ -135,7 +135,7 @@ const Map: React.FC<IMapProps> = ({
         {/* Laghouat */}
         <g
           onClick={() =>
-            onWilayaClick?.("Laghouat", data["Laghouat"]?.value ?? 0)
+            onWilayaClick?.("Laghouat", data["Laghouat"])
           }
         >
           <polygon
@@ -163,7 +163,7 @@ const Map: React.FC<IMapProps> = ({
           onClick={() =>
             onWilayaClick?.(
               "Oum El Bouaghi",
-              data["Oum El Bouaghi"]?.value ?? 0
+              data["Oum El Bouaghi"]
             )
           }
         >
@@ -187,7 +187,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
 
         {/* Batna */}
-        <g onClick={() => onWilayaClick?.("Batna", data["Batna"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Batna", data["Batna"])}>
           <path
             className="state"
             id="_x30_5_Batna"
@@ -211,7 +211,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         {/* Bejaïa */}
         <g
-          onClick={() => onWilayaClick?.("Béjaïa", data["Béjaïa"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Béjaïa", data["Béjaïa"])}
         >
           <path
             className="state"
@@ -230,7 +230,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         {/* Biskra */}
         <g
-          onClick={() => onWilayaClick?.("Biskra", data["Biskra"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Biskra", data["Biskra"])}
         >
           <path
             className="state"
@@ -250,7 +250,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         {/* Bechar */}
         <g
-          onClick={() => onWilayaClick?.("Béchar", data["Béchar"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Béchar", data["Béchar"])}
         >
           <polygon
             className="state"
@@ -275,7 +275,7 @@ const Map: React.FC<IMapProps> = ({
 	148.361,56.214 145.88,58.635 148.38,62.654 146.361,65.054 146.42,68.794 148.119,72.434 153.962,77.135 152.322,83.094 "
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Blida", data["Blida"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Blida", data["Blida"])}>
           <path
             className="state"
             id="_x30_9_Blida"
@@ -291,7 +291,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Bouira", data["Bouira"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Bouira", data["Bouira"])}
         >
           <path
             className="state"
@@ -311,7 +311,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Tamanrasset", data["Tamanrasset"]?.value ?? 0)
+            onWilayaClick?.("Tamanrasset", data["Tamanrasset"])
           }
         >
           <path
@@ -337,7 +337,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Tébessa", data["Tébessa"]?.value ?? 0)
+            onWilayaClick?.("Tébessa", data["Tébessa"])
           }
         >
           <polygon
@@ -361,7 +361,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Tlemcen", data["Tlemcen"]?.value ?? 0)
+            onWilayaClick?.("Tlemcen", data["Tlemcen"])
           }
         >
           <path
@@ -381,7 +381,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Tiaret", data["Tiaret"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Tiaret", data["Tiaret"])}
         >
           <path
             className="state"
@@ -404,7 +404,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Tizi Ouzou", data["Tizi Ouzou"]?.value ?? 0)
+            onWilayaClick?.("Tizi Ouzou", data["Tizi Ouzou"])
           }
         >
           <path
@@ -421,7 +421,7 @@ const Map: React.FC<IMapProps> = ({
 	l0.09-1.56l2.708-2.326l-0.27-2.478l10.878-0.642l3.702,0.852l1.972-1.094L358.202-211.78L358.202-211.78z"
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Alger", data["Alger"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Alger", data["Alger"])}>
           <path
             className="state"
             id="_x31_6_Alger"
@@ -436,7 +436,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Djelfa", data["Djelfa"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Djelfa", data["Djelfa"])}
         >
           <polygon
             className="state"
@@ -463,7 +463,7 @@ const Map: React.FC<IMapProps> = ({
 	382.462,-41.846 "
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Jijel", data["Jijel"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Jijel", data["Jijel"])}>
           <path
             className="state"
             id="_x31_8_Jijel"
@@ -478,7 +478,7 @@ const Map: React.FC<IMapProps> = ({
 	L406.661-196.316L406.661-196.316z"
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Sétif", data["Sétif"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Sétif", data["Sétif"])}>
           <path
             className="state"
             id="_x31_9_Sétif"
@@ -497,7 +497,7 @@ const Map: React.FC<IMapProps> = ({
 	l1.502-0.048l0.806,3.708l1.958,0.154l1.984-1.916l2.498,1.352L406.661-196.316L406.661-196.316z"
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Saïda", data["Saïda"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Saïda", data["Saïda"])}>
           <path
             className="state"
             id="_x32_0_Saida"
@@ -515,7 +515,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Skikda", data["Skikda"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Skikda", data["Skikda"])}
         >
           <path
             className="state"
@@ -537,7 +537,7 @@ const Map: React.FC<IMapProps> = ({
           onClick={() =>
             onWilayaClick?.(
               "Sidi Bel Abbès",
-              data["Sidi Bel Abbès"]?.value ?? 0
+              data["Sidi Bel Abbès"]
             )
           }
         >
@@ -561,7 +561,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Annaba", data["Annaba"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Annaba", data["Annaba"])}
         >
           <path
             className="state"
@@ -578,7 +578,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Guelma", data["Guelma"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Guelma", data["Guelma"])}
         >
           <path
             className="state"
@@ -598,7 +598,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Constantine", data["Constantine"]?.value ?? 0)
+            onWilayaClick?.("Constantine", data["Constantine"])
           }
         >
           <path
@@ -616,7 +616,7 @@ const Map: React.FC<IMapProps> = ({
 	L460.215-176.918z"
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Médéa", data["Médéa"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Médéa", data["Médéa"])}>
           <path
             className="state"
             id="_x32_6_Médéa"
@@ -638,7 +638,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Mostaganem", data["Mostaganem"]?.value ?? 0)
+            onWilayaClick?.("Mostaganem", data["Mostaganem"])
           }
         >
           <path
@@ -656,7 +656,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("M'Sila", data["M'Sila"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("M'Sila", data["M'Sila"])}
         >
           <path
             className="state"
@@ -679,7 +679,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Mascara", data["Mascara"]?.value ?? 0)
+            onWilayaClick?.("Mascara", data["Mascara"])
           }
         >
           <path
@@ -701,7 +701,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Ouargla", data["Ouargla"]?.value ?? 0)
+            onWilayaClick?.("Ouargla", data["Ouargla"])
           }
         >
           <path
@@ -718,7 +718,7 @@ const Map: React.FC<IMapProps> = ({
 	l5.52,2.22l5.06,2.26l3.3,1.62l6.78,0.8l79.46-8.52L582,103.394z"
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Oran", data["Oran"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Oran", data["Oran"])}>
           <path
             className="state"
             id="_x33_1_Oran"
@@ -736,7 +736,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("El Bayadh", data["El Bayadh"]?.value ?? 0)
+            onWilayaClick?.("El Bayadh", data["El Bayadh"])
           }
         >
           <polygon
@@ -761,7 +761,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Illizi", data["Illizi"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Illizi", data["Illizi"])}
         >
           <polygon
             className="state"
@@ -786,12 +786,12 @@ const Map: React.FC<IMapProps> = ({
           onClick={() =>
             onWilayaClick?.(
               "Bordj Bou Arreridj",
-              data["Bordj Bou Arreridj"]?.value ?? 0
+              data["Bordj Bou Arreridj"]
             )
           }
         >
           <title>
-            Bordj Bou Arreridj: {data["Bordj Bou Arreridj"]?.value ?? 0}
+            Bordj Bou Arreridj: {data["Bordj Bou Arreridj"].value}
           </title>
           <path
             className="state"
@@ -810,7 +810,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Boumerdès", data["Boumerdès"]?.value ?? 0)
+            onWilayaClick?.("Boumerdès", data["Boumerdès"])
           }
         >
           <path
@@ -829,7 +829,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("El Tarf", data["El Tarf"]?.value ?? 0)
+            onWilayaClick?.("El Tarf", data["El Tarf"])
           }
         >
           <path
@@ -848,7 +848,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Tindouf", data["Tindouf"]?.value ?? 0)
+            onWilayaClick?.("Tindouf", data["Tindouf"])
           }
         >
           <polygon
@@ -869,7 +869,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Tissemsilt", data["Tissemsilt"]?.value ?? 0)
+            onWilayaClick?.("Tissemsilt", data["Tissemsilt"])
           }
         >
           <path
@@ -889,7 +889,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("El Oued", data["El Oued"]?.value ?? 0)
+            onWilayaClick?.("El Oued", data["El Oued"])
           }
         >
           <polygon
@@ -910,7 +910,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Khenchela", data["Khenchela"]?.value ?? 0)
+            onWilayaClick?.("Khenchela", data["Khenchela"])
           }
         >
           <polygon
@@ -936,7 +936,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Souk Ahras", data["Souk Ahras"]?.value ?? 0)
+            onWilayaClick?.("Souk Ahras", data["Souk Ahras"])
           }
         >
           <path
@@ -955,7 +955,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Tipaza", data["Tipaza"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Tipaza", data["Tipaza"])}
         >
           <path
             className="state"
@@ -970,7 +970,7 @@ const Map: React.FC<IMapProps> = ({
 	l-2.352-0.56l-13.48,4.064l-4.622-0.548L238.204-193.226L238.204-193.226z"
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Mila", data["Mila"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Mila", data["Mila"])}>
           <path
             className="state"
             id="_x34_3_Mila"
@@ -988,7 +988,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Aïn Defla", data["Aïn Defla"]?.value ?? 0)
+            onWilayaClick?.("Aïn Defla", data["Aïn Defla"])
           }
         >
           <path
@@ -1006,7 +1006,7 @@ const Map: React.FC<IMapProps> = ({
 	L271.403-177l1.25-3.82l2.692,0.086L276.861-181.958L276.861-181.958z"
           />
         </g>
-        <g onClick={() => onWilayaClick?.("Naâma", data["Naâma"]?.value ?? 0)}>
+        <g onClick={() => onWilayaClick?.("Naâma", data["Naâma"])}>
           <polygon
             className="state"
             id="_x34_5_Naâma"
@@ -1030,7 +1030,7 @@ const Map: React.FC<IMapProps> = ({
           onClick={() =>
             onWilayaClick?.(
               "Aïn Témouchent",
-              data["Aïn Témouchent"]?.value ?? 0
+              data["Aïn Témouchent"]
             )
           }
         >
@@ -1051,7 +1051,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Ghardaïa", data["Ghardaïa"]?.value ?? 0)
+            onWilayaClick?.("Ghardaïa", data["Ghardaïa"])
           }
         >
           <polygon
@@ -1071,7 +1071,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Relizane", data["Relizane"]?.value ?? 0)
+            onWilayaClick?.("Relizane", data["Relizane"])
           }
         >
           <path
@@ -1092,7 +1092,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Timimoun", data["Timimoun"]?.value ?? 0)
+            onWilayaClick?.("Timimoun", data["Timimoun"])
           }
         >
           <polygon
@@ -1113,12 +1113,12 @@ const Map: React.FC<IMapProps> = ({
           onClick={() =>
             onWilayaClick?.(
               "Bordj Badji Mokhtar",
-              data["Bordj Badji Mokhtar"]?.value ?? 0
+              data["Bordj Badji Mokhtar"]
             )
           }
         >
           <title>
-            Bordj Badji Mokhtar: {data["Bordj Badji Mokhtar"]?.value ?? 0}
+            Bordj Badji Mokhtar: {data["Bordj Badji Mokhtar"].value}
           </title>
           <polygon
             className="state"
@@ -1138,7 +1138,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Ouled Djellal", data["Ouled Djellal"]?.value ?? 0)
+            onWilayaClick?.("Ouled Djellal", data["Ouled Djellal"])
           }
         >
           <path
@@ -1159,7 +1159,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Béni Abbès", data["Béni Abbès"]?.value ?? 0)
+            onWilayaClick?.("Béni Abbès", data["Béni Abbès"])
           }
         >
           <polygon
@@ -1183,7 +1183,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("In Salah", data["In Salah"]?.value ?? 0)
+            onWilayaClick?.("In Salah", data["In Salah"])
           }
         >
           <path
@@ -1205,7 +1205,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("In Guezzam", data["In Guezzam"]?.value ?? 0)
+            onWilayaClick?.("In Guezzam", data["In Guezzam"])
           }
         >
           <path
@@ -1226,7 +1226,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("Touggourt", data["Touggourt"]?.value ?? 0)
+            onWilayaClick?.("Touggourt", data["Touggourt"])
           }
         >
           <path
@@ -1243,7 +1243,7 @@ const Map: React.FC<IMapProps> = ({
           />
         </g>
         <g
-          onClick={() => onWilayaClick?.("Djanet", data["Djanet"]?.value ?? 0)}
+          onClick={() => onWilayaClick?.("Djanet", data["Djanet"])}
         >
           <polygon
             className="state"
@@ -1264,7 +1264,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("El Meghaier", data["El Meghaier"]?.value ?? 0)
+            onWilayaClick?.("El Meghaier", data["El Meghaier"])
           }
         >
           <polygon
@@ -1283,7 +1283,7 @@ const Map: React.FC<IMapProps> = ({
         </g>
         <g
           onClick={() =>
-            onWilayaClick?.("El Menia", data["El Menia"]?.value ?? 0)
+            onWilayaClick?.("El Menia", data["El Menia"])
           }
         >
           <polygon
